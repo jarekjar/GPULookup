@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpuLookup.Scraper", "GpuLookup.Scraper\GpuLookup.Scraper.csproj", "{2594D6F2-F404-44BF-A047-F7A172B8F064}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GpuLookup.Web", "GpuLookup.Web\GpuLookup.Web.csproj", "{EE1338D9-2576-450C-B51B-D123CE9BC8A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2594D6F2-F404-44BF-A047-F7A172B8F064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2594D6F2-F404-44BF-A047-F7A172B8F064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2594D6F2-F404-44BF-A047-F7A172B8F064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2594D6F2-F404-44BF-A047-F7A172B8F064}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE1338D9-2576-450C-B51B-D123CE9BC8A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE1338D9-2576-450C-B51B-D123CE9BC8A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE1338D9-2576-450C-B51B-D123CE9BC8A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE1338D9-2576-450C-B51B-D123CE9BC8A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5ED9135-3B9D-43C1-A53C-B3B326CE0B16}
+	EndGlobalSection
+EndGlobal
