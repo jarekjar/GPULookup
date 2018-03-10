@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AngleSharp, Version=0.9.9.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
+      <HintPath>..\packages\AngleSharp.0.9.9.1\lib\net45\AngleSharp.dll</HintPath>
+    </Reference>
     <Reference Include="IronWebScraper, Version=4.0.4.29861, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IronWebScraper.4.0.4.3\lib\net452\IronWebScraper.dll</HintPath>
     </Reference>

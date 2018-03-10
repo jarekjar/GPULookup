@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using IronWebScraper;
+using AngleSharp.Parser.Html;
 
 namespace GpuLookup.Scraper
 {
@@ -13,14 +13,13 @@ namespace GpuLookup.Scraper
     {
         static void Main(string[] args)
         {
+            var parser = new HtmlParser();
             var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
             WebClient webClient = new WebClient();
             var result = webClient.DownloadString(page1);
-            string replaceWith = "";
-            string match = "<a\\s+(?:[^>]*?\\s+)?href=\"([^ \"]*)\"";
-            result = result.Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith);
-            var image_link_match = Regex.Match(result, match).Value;
-            Console.WriteLine(image_link_match);
+            var document = parser.Parse(result);
+            Console.WriteLine("Serializing the (original) document:");
+            Console.WriteLine(document.DocumentElement.OuterHtml);
             Console.ReadLine();
         }
     }
