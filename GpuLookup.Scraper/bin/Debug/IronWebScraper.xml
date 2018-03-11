@@ -1,0 +1,1069 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IronWebScraper</name>
+    </assembly>
+    <members>
+        <member name="T:IronWebScraper.MetaData">
+             <summary>
+             <para>A flexible dictionary of object values which can be used to attach your own additional data or objects to any Request. 
+             Meta can contain objects of any Type including instances of classes, List and Dictionaries.
+             This meta-data can then be accessed while Paring the Response and even passed forwards to the next Request. </para>
+             <para>Metadata send might include pagination page numbers, referrer Urls, User Ids etc.</para>
+            E.g: 
+            <example><code>Request["page-number"] = 2; 
+            
+            int pageNumber = Response.Request.Meta.Get&lt;int>("page-number");</code></example>
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.MetaData.Get``1(System.String)">
+            <summary>
+            <para>Returns the specified meta object cast as the appropriate type.</para>
+            <example>E.g:<code> Get&lt;int&gt;("index")  </code></example>
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="key">Key</param>
+            <returns></returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException"></exception>
+        </member>
+        <member name="T:IronWebScraper.License">
+            <summary>
+            A public static class used to apply license keys to IronWebScraper.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.License.LicenseKey">
+             <summary>
+              Unlocks IronWebScraper for full professional usage. Get Licensed at http://ironsoftware.com/csharp/webscraper/licensing/
+              A License key can also be added to Web.Config or App.Config as IronWebScraper.LicenseKey
+             </summary>
+            
+        </member>
+        <member name="M:IronWebScraper.License.IsValidLicense(System.String)">
+             <summary>
+             Determines whether a license key is valid.
+             </summary>
+             <param name="LicenseKey">IronWebScraper license key as a string</param>
+            
+        </member>
+        <member name="T:IronWebScraper.License.Lic">
+            <exclude />
+        </member>
+        <member name="M:IronWebScraper.License.Lic.Validate(System.String[],System.String)">
+            <exclude />
+        </member>
+        <member name="T:IronWebScraper.CommonUserAgents">
+            <summary>
+            Static helper class which lists common web-browser user-agent strings.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.CommonUserAgents.All">
+            <summary>
+            Common desktop, tablet and mobile user-agent strings. 
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.CommonUserAgents.DesktopUserAgents">
+            <summary>
+            Common desktop web-browser user-agent strings. Chrome, IE11 and Safari.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.CommonUserAgents.MobileUserAgents">
+            <summary>
+            Common mobile web-browser user-agent strings. iPad, iPhone and Windows Tablet.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.CommonUserAgents.ChromeDesktopUserAgents">
+            <summary>
+            Common desktop Chrome web-browser user-agent strings, most popular first.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.CommonUserAgents.FireFoxDesktopUserAgents">
+            <summary>
+            Common desktop FireFox web-browser user-agent strings, most popular first.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.CommonUserAgents.SafariDesktopUserAgents">
+            <summary>
+            Common OS X Safari web-browser user-agent strings, most popular first.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.CommonUserAgents.IE11DesktopUserAgents">
+            <summary>
+            Common IE11 desktop web-browser user-agent strings, most popular first.
+            Only IE11 is listed for IE to give the best chance of consistent HTML being served.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.CommonUserAgents.WindowsTabletUserAgents">
+            <summary>
+            Common Windows Tablet user-agent strings.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.CommonUserAgents.IPadUserAgents">
+            <summary>
+            Common Apple iApd user agent strings.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.CommonUserAgents.IPhoneUserAgents">
+            <summary>
+            Common Apple iPhone user agent strings.
+            </summary>
+        </member>
+        <member name="T:IronWebScraper.HtmlNodeExtensions">
+            <summary>
+             Extension methods for finding elements within with IEnumerable&lt;HtmlNode&gt;
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNodeExtensions.CSS(System.Collections.Generic.IEnumerable{IronWebScraper.HtmlNode},System.String)">
+            <summary>
+            Searched multiple HtmlNodes for the given CSS Selector, and returns all distinct matches.
+            </summary>
+            <param name="nodes">HtmlNodes to search</param>
+            <param name="selector">A CSS query selector</param>
+            <returns></returns>
+        </member>
+        <member name="M:IronWebScraper.HtmlNodeExtensions.ContainingText(System.Collections.Generic.IEnumerable{IronWebScraper.HtmlNode},System.String)">
+            <summary>
+            Returns all HtmlNodes in the collection that contain the search text.
+            </summary>
+            <param name="nodes">The nodes.</param>
+            <param name="search">The search string.</param>
+        </member>
+        <member name="M:IronWebScraper.HtmlNodeExtensions.ContainingTextCaseInsensitive(System.Collections.Generic.IEnumerable{IronWebScraper.HtmlNode},System.String)">
+            <summary>
+            Returns all HtmlNodes in the collection that contain the search text.
+            Case Insensitive.
+            </summary>
+            <param name="nodes">The nodes.</param>
+            <param name="search">The search string.</param>
+        </member>
+        <member name="T:IronWebScraper.HtmlNode">
+            <summary>
+            The HtmlNode class represents a single DOM element in a HTML or XML document.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.QuerySelector(System.String)">
+            <summary>
+            Synonym of JavaScript's querySelector function.  Searches inside the current HtmlNode.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.QuerySelectorAll(System.String)">
+            <summary>
+            Synonym of JavaScript's querySelectorAll function.  Searches inside the current HtmlNode.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.GetElementById(System.String)">
+            <summary>
+            Synonym of JavaScript's getElementById function.  Searches inside the current HtmlNode.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.GetElementsByTagName(System.String)">
+            <summary>
+            Synonym of JavaScript's getElementsByTagName function.  Searches inside the current HtmlNode.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.XPath(System.String)">
+            <summary>
+            Queries the HtmlNode to return all descendant nodes matching an XPath expression.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.CssExists(System.String)">
+            <summary>
+            Uses CSS selectors to find if there are any matching nodes within the Response Document.
+            This works in the same way as  $('.ClassName').length > 0 in jQuery or querySelectorAll().length >0  in JavaScript.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.Css(System.String)">
+            <summary>
+            Uses CSS selectors to find all child nodes matching selector.
+            This works in the same way as  $('.ClassName') in jQuery or querySelectorAll() in JavaScript.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.NodeName">
+            <summary>
+            Name of the HtmlNode such as "div" "p" or "#text"
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.NodeType">
+            <summary>
+            <para>Type of the HtmlNode </para>
+            Possible values are:  "ELEMENT_NODE", "TEXT_NODE" ,"CDATA_SECTION_NODE" ,"COMMENT_NODE", "DOCUMENT_NODE","DOCUMENT_TYPE_NODE","DOCUMENT_FRAGMENT_NODE"
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.GetAttribute(System.String)">
+            <summary>
+            <para>Gets a single attribute vale from the HtmlNode.  Returns null if that attribute is not present.</para>
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HtmlNode.HasAtribute(System.String)">
+            <summary>
+            Tests if the HtmlNode has a given attribute such as "class" or "href"
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.Attributes">
+            <summary>
+            Gets the attributes of the HTML node (such ash href, class, style etc).
+            </summary>
+            <value>
+            The attributes as a Dictionary&lt;string, string>
+            </value>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.ParentNode">
+            <summary>
+            Gets the Parent (enclosing) tag for this HtmlNode.
+            </summary>
+            <value>
+            The parent node as an HtmlNode.
+            </value>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.OuterHtml">
+            <summary>
+            Gets the HtmlNode's outer Html as a string. OuterHTML will include the tag's own html markup.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.ChildNodes">
+            <summary>
+            An array of nodes nested within the HtmlNode.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.TextContentClean">
+            <summary>
+            Gets the text content of the HtmlNode, Trimmed, with all groups of whitespace turned into a single space character.
+            TextContent will include the content of non-printable elements just as style and script nodes.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.InnerText">
+            <summary>
+            Gets the text content of the HtmlNode as might be shown to a user.
+            Text will be trimmed, with all groups of whitespace turned into a single space character.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.InnerTextClean">
+            <summary>
+            Gets the text content of the HtmlNode as might be shown to a user.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.TextContent">
+            <summary>
+            Gets the text content of the HtmlNode and all of its descendants.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HtmlNode.InnerHtml">
+            <summary>
+            Gets the HtmlNode's inner Html as a string. OuterHTML will not include the current tag's own html markup, only that nested inside it.
+            </summary>
+        </member>
+        <member name="T:IronWebScraper.Request">
+            <summary>
+            Represents a http request to be made by IronWebScraper
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Request.Hash(IronWebScraper.Request)">
+            <summary>
+            Hashing function for uniquely identifying web requests.   
+            </summary>
+            <param name="Request">A Request object</param>
+            <returns></returns>
+        </member>
+        <member name="F:IronWebScraper.Request.MetaData">
+            <summary>
+            Allows additional meta-data of any Type to be attached to a request, and retrieved when the subsequent Response is parsed.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.Request.Identity">
+            <summary>
+            An HttpIdentity comprising Proxy, Headers, UserAgnet etc.. which will be used to fetch the Request.
+            </summary>
+             [JsonIgnore]
+        </member>
+        <member name="P:IronWebScraper.Request.Url">
+            <summary>
+            Absolute URL to be scraped.
+            </summary>
+             [JsonIgnore]
+        </member>
+        <member name="P:IronWebScraper.Request.Retries">
+            <summary>
+            Number of attempts which have been made to fetch content from this Request so far.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.Request.Method">
+            <summary>
+            Http Request method.
+            </summary>
+            <value>
+            "GET" or "POST"
+            </value>
+        </member>
+        <member name="F:IronWebScraper.Request.Action">
+            <summary>
+            The Action&lt;Response> which will be used to parse the response.  See IronWebScraper.Parse.
+            </summary>
+        </member>
+        <member name="T:IronWebScraper.Response">
+            <summary>
+            Represents a http response made by IronWebScraper
+            </summary>
+            
+        </member>
+        <member name="F:IronWebScraper.Response.Request">
+            <summary>
+            The Request from which the Response was created.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.Response.TextContent">
+            <summary>
+            The content downloaded from the Url encoded as a String.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.Response.BinaryContent">
+            <summary>
+            The content downloaded from the Url as raw binary data
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.Response.StatusCode">
+            <summary>
+            The http status code given by the url which as 200 or 404.  0 is returned in case the server is uncontactable.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.Response.FinalUrl">
+            <summary>
+            The Url from which the Response was returned.  This may differ from RequestlUrl if these was an http redirect.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.Response.RequestlUrl">
+            <summary>
+            The Url from which the Response was requested.  This may differ from FinalUrl if these was an http redirect.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.Response.CretaedFromWebCache">
+            <summary>
+            True if the Response was created from a cached version of the Url rather than from live data.  
+            See WebScraper.EnableWebCache() method, which is can be called from within the WebScraper.Init() method.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.Response.MetaData">
+            <summary>
+            Returns additional meta-data which was attached to the Request.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.QuerySelector(System.String)">
+            <summary>
+            Synonym of JavaScript's querySelector function.  Searches inside the Response document as an HTML or XML Document using CSS selectors.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.QuerySelectorAll(System.String)">
+            <summary>
+            Synonym of JavaScript's querySelectorAll function.  Searches inside the response document as an HTML or XML Document using CSS selectors.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.GetElementById(System.String)">
+            <summary>
+            Synonym of JavaScript's getElementById function.  Searches inside the response as an HTML or XML Document by ID attribute.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.GetElementsByTagName(System.String)">
+            <summary>
+            Synonym of JavaScript's getElementById function.  Searches inside the response as an HTML or XML Document by tag-name such as "a" or "img".
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.XPath(System.String)">
+            <summary>
+            Searches inside the response as an HTML / XML Document using an XPath expression.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.ToAbsoluteUrl(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Makes any relative url strings absolute relative to this Response Document.  
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.ToAbsoluteUrl(System.String)">
+            <summary>
+            Makes a relative url strings absolute relative to this Response Document.  
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.Response.CharSet">
+            <summary>
+            Name of the charset used to encode the web resource.
+            When reading TextConent, the result has already been decoded to C# default encoding (utf-8) on your behalf.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.Response.MimeType">
+            <summary>
+            The MIME type of the Response content.  E.g:  "text/html"
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.Response.Html">
+            <summary>
+            Synonym of content which checks for an Html content
+            </summary>
+            <value>
+            The HTML.
+            </value>
+            <exception cref="T:System.FormatException">Document does not have an HTML mime type or contain a &lt;body&gt; or  &lt;html&gt; tag</exception>
+        </member>
+        <member name="P:IronWebScraper.Response.Document">
+            <summary>
+            Returns an HtmlNode for the entire Response Document. (HTML/XML)
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.CssExists(System.String)">
+            <summary>
+            Uses CSS selectors to find if there are any matching nodes within the Response Document.
+            This works in the same way as  $('.ClassName').length > 0 in jQuery or querySelectorAll().length >0  in JavaScript.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Response.Css(System.String)">
+            <summary>
+            Uses CSS selectors to find all matching nodes within the Response Document.
+            This works in the same way as  $('.ClassName') in jQuery or querySelectorAll() in JavaScript.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.Response.WasSuccessful">
+            <summary>
+            Gets a value indicating whether this HTTP request yielded a successful response code.
+            </summary>
+            <value>
+            <c>true</c> if the response was successful; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:IronWebScraper.ScrapedData">
+             <summary>
+            <para> A flexible dictionary of object values used to conveniently store scraped data of any Type in a key-value dictionary which can be saved as JSON using the Yield method.
+             ScrapedData can hold data objects of any Type, including Classes. </para>
+             
+            E.g: 
+            <example><code>var Data = new ScrapedData(); 
+            Data['title'] = "Page Title";
+            Data['date'] = DateTime.Now;
+            </code></example>
+             </summary>
+        </member>
+        <member name="M:IronWebScraper.ScrapedData.ToJson">
+            <summary>
+            Converts the ScrapedData to a JSON string.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.ScrapedData.FromJson(System.String)">
+            <summary>
+            Deserializes a ScrapedData object from JSON created using the toJson() method.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.ScrapedData.Get``1(System.String)">
+            <summary>
+            <para>Returns the specified ScrapedData item  cast as the appropriate type.</para>
+            <example>E.g:<code> Get&lt;string&gt;("url");  </code></example>
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="key">Key</param>
+            <returns></returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException"></exception> 
+        </member>
+        <member name="T:IronWebScraper.WebScraper">
+            <summary>
+            A base class which developers can extend to build custom web-scraping applications.
+            </summary>
+            <summary>
+            An easy to use base class which developers can extend to rapidly build custom web-scraping applications.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.EnableWebCache">
+            <summary>
+            Caches web http responses for reuse. This allows WebScraper classes to be modified and restarted without re-downloading previously scraped urls.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.EnableWebCache(System.TimeSpan)">
+            <summary>
+            Caches web http responses for reuse. This allows WebScraper classes to be modified and restarted without re-downloading previously scrape urls.
+            </summary>
+            <param name="cacheDuration">Duration that responses will be cached for.</param>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.FilesDownloaded">
+            <summary>
+            The total number of files downloaded successfully with the DownloadImage and DownloadFile methods.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.DownloadImage(System.Uri,System.String,System.Int32,System.Int32,System.Boolean,IronWebScraper.HttpIdentity)">
+            <summary>
+            Requests a file to be downloaded from the given Url to the local file-system.  Often used for scraping documents, assets and images.
+            <para>Normally called with an Parse Method of IronWebScraper.WebScraper</para>
+            </summary>
+            <param name="uri">The absolute uri of the resource to be downloaded.</param>
+            <param name="path">The path to which the downloaded file should be saved. You may give a directory name or a file name.  <para>Relative paths will be resolved relative to WorkingDirectory.</para></param>
+            <param name="maxWidth">The Downloaded image will be scaled proportionally to this maximum width.  Zero means no constraint.</param>
+            <param name="maxHeight">The Downloaded image will be scaled proportionally to this maximum height.  Zero means no constraint.</param>
+            <param name="overWrite">If set to <c>true</c> any existing file at the given path will be overwritten. If set to <c>false</c> a unique name such as "file(1).html" will be created in the case of a naming conflict.</param>
+            <param name="identity">An HttpIdentity to send the Request.  If null, the ChooseIdentityForRequest method will be used to find a suitable identity.</param>
+            <returns>The file path (relative to WorkingDirecory) which the image will be saved to.</returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.DownloadImage(System.String,System.String,System.Int32,System.Int32,System.Boolean,IronWebScraper.HttpIdentity)">
+            <summary>
+            Requests a file to be downloaded from the given Url to the local file-system.  Often used for scraping documents, assets and images.
+            <para>Normally called with an Parse Method of IronWebScraper.WebScraper</para>
+            </summary>
+            <param name="url">The absolute url of the resource to be downloaded.</param>
+            <param name="path">The path to which the downloaded file should be saved. You may give a directory name or a file name.  <para>Relative paths will be resolved relative to WorkingDirectory.</para></param>
+            <param name="maxWidth">The Downloaded image will be scaled proportionally to this maximum width.  Zero means no constraint.</param>
+            <param name="maxHeight">The Downloaded image will be scaled proportionally to this maximum height.  Zero means no constraint.</param>
+            <param name="overWrite">If set to <c>true</c> any existing file at the given path will be overwritten. If set to <c>false</c> a unique name such as "file(1).html" will be created in the case of a naming conflict.</param>
+            <param name="identity">An HttpIdentity to send the Request.  If null, the ChooseIdentityForRequest method will be used to find a suitable identity.</param>
+            <returns>The file path (relative to WorkingDirecory) which the image will be saved to.</returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.DownloadFile(System.Uri,System.String,System.Boolean,IronWebScraper.HttpIdentity)">
+            <summary>
+            Requests a file to be downloaded from the given Url to the local file-system.  Often used for scraping documents, assets and images.
+            <para>Normally called with an Parse Method of IronWebScraper.WebScraper</para>
+            </summary>
+            <param name="uri">The absolute uri of the resource to be downloaded.</param>
+            <param name="path">The path to which the downloaded file should be saved. You may give a directory name or a file name.  <para>Relative paths will be resolved relative to WorkingDirectory.</para> </param>
+            <param name="overWrite">If set to <c>true</c> any existing file at the given path will be overwritten. If set to <c>false</c> a unique name such as "file(1).html" will be created in the case of a naming conflict.</param>
+            <param name="identity">An HttpIdentity to send the Request.  If null, the ChooseIdentityForRequest method will be used to find a suitable identity.</param>
+            <returns>The file path (relative to WorkingDirecory) which the file will be saved to.</returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.DownloadFileUnique(System.String,System.String,IronWebScraper.HttpIdentity)">
+            <summary>
+            Much like DownloadFile except if the file has already been downloaded or exists locally, it will not be re-downloaded.
+            <para>Requests a file to be downloaded from the given Url to the local file-system.  Often used for scraping documents, assets and images.</para>
+            <para>Normally called with an Parse Method of IronWebScraper.WebScraper</para>
+            </summary>
+            <param name="url">The URL.</param>
+            <param name="path">The path.</param>
+            <param name="identity">The identity.</param>
+            <returns></returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.DownloadFile(System.String,System.String,System.Boolean,IronWebScraper.HttpIdentity)">
+            <summary>
+            Requests a file to be downloaded from the given Url to the local file-system.  Often used for scraping documents, assets and images.
+            <para>Normally called with an Parse Method of IronWebScraper.WebScraper</para>
+            </summary>
+            <param name="url">The absolute url of the resource to be downloaded.</param>
+            <param name="path">The path to which the downloaded file should be saved. You may give a directory name or a file name.  <para>Relative paths will be resolved relative to WorkingDirectory.</para> </param>
+            <param name="overWrite">If set to <c>true</c> any existing file at the given path will be overwritten. If set to <c>false</c> a unique name such as "file(1).html" will be created in the case of a naming conflict.</param>
+            <param name="identity">An HttpIdentity to send the Request.  If null, the ChooseIdentityForRequest method will be used to find a suitable identity.</param>
+            <returns>The file path (relative to WorkingDirecory) which the file will be saved to.</returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.ParseWebscraperDownloadImage(IronWebScraper.Response)">
+            <summary>
+            Internal method to parse images downloaded by a webScraper.
+            </summary>
+            <param name="response">A Response object</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.ParseWebscraperDownload(IronWebScraper.Response)">
+            <summary>
+            Internal method to parse binary files downloaded by a webScraper.
+            </summary>
+            <param name="response">A Response object</param>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.WorkingDirectory">
+            <summary>
+            Path to a local directory where scraped data and state information will be saved.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Parse(IronWebScraper.Response)">
+            <summary>
+            Override this method to create the default Response handler for your web scraper.
+            If you have multiple page types, you can add additional similar methods.
+            </summary>
+            <param name="response">The http Response object to parse</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Init">
+            <summary>
+            Override this method initialize your web-scraper.
+            Important tasks will be to Request at least one start url... and set allowed/banned domain or url patterns.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.WebScraper.SuccessfulFileDownloadCount">
+            <summary>  
+            Gets the number of successful http downloads using the DownloadFile and DownloadImage methods..
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.WebScraper.SuccessfulfulRequestCount">
+            <summary>  
+            Gets the number of successful http requests.
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.WebScraper.FailedUrls">
+            <summary>  
+            Gets the number of failed http requests which have exceeded their total maximum number of retries.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.CrawlId">
+            <summary>
+            A unique string used to identify a crawl job.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.FetchUrlContentsBinary(System.String,IronWebScraper.HttpIdentity)">
+            <summary>
+            A handy shortcut method that fetches the text content from any Url (synchronously) as a binary data in a byye array (byte[])
+            </summary>
+            <param name="url">The absolute URL.</param>
+            <param name="identity">OPtional HTTP identity to choose a proxy, user agent, headers, username and password for the request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.FetchUrlContents(System.String,IronWebScraper.HttpIdentity)">
+            <summary>
+            A handy shortcut method that fetches the text content from any Url (synchronously).
+            </summary>
+            <param name="url">The absolute URL.</param>
+            <param name="identity">OPtional HTTP identity to choose a proxy, user agent, headers, username and password for the request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.ObeyRobotsDotTxtForHost(System.String)">
+            <summary>
+            Causes the WebScraper to always obey /robots.txt directives including path restrictions and crawl rates on a domain by domain basis.
+            May be overridden for advanced control.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.ChooseIdentityForRequest(IronWebScraper.Request)">
+            <summary>
+            Picks a random identity from WebScraper.Identities for each request.
+            Add Identities with proxy IP addresses, userAgents, headers, cookies, username and password in your Init Method and add them to the WebScraper.Identities List;
+            <para> Override this method to create your own logic for non-random selection of a HttpIdentity for each request. </para>
+            </summary>
+            <param name="request">The http Request</param>
+            <returns>An HttpIdentity</returns>
+        </member>
+        <member name="T:IronWebScraper.WebScraper.LogLevel">
+            <summary>
+            Level of WebScraper logging to the Console.
+            Because this Enum is a Flag type options can be combined using a pipe: e.g. LogLevel.Critical | LogLevel.ScrapedData
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.LogLevel.None">
+            <summary>
+            No Logs
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.LogLevel.Critical">
+            <summary>
+            Logs critical events such as permanently irretrievable page failures and system information.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.LogLevel.ScrapedData">
+            <summary>
+            Logs data which has been extracted, in a JSON format.
+            <para>If using YieldUnique, only new records will be logged.</para>
+            <para>Will also log File downloads and Images download</para>
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.LogLevel.Http">
+            <summary>
+            Logs HTTP request success and failures
+            <para>Verbose. Useful for advanced debugging.</para>
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.LogLevel.Decision">
+            <summary>
+            Logs about decisions made by the crawler.
+            <para>Verbose.  Useful for advanced debugging.</para>
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.LogLevel.All">
+            <summary>
+            All events are logged to the console.  Extremely verbose;
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.LoggingLevel">
+            <summary>
+            The level of  logging made by the WebScraper engine to the Console.
+            <para>LogLevel.Critical is normally the most useful setting, allowing the developer to write their own, meaningful and application relevant messages inside of Parse methods.</para>
+            <para>LogLevel.ScrapedData is useful when coding and testing a new WebScraper.</para>
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Log(System.String,IronWebScraper.WebScraper.LogLevel)">
+            <summary>
+            Logs the specified message to the console.
+            Logs can be Enabled using the EnableLogging.
+            This function has been exposed and is over-ridable to allow for easy Email and Slack notification integration.
+            </summary>
+            <param name="Message">The string message.</param>
+            <param name="Type">The LogLevel.</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.AcceptUrl(System.String)">
+            <summary>
+            Decides if the WebScraper will accept a given url.  My be overridden to apply custom middleware logic.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.SetSiteSpecificCrawlRateLimit(System.String,System.TimeSpan)">
+            <summary>
+            Set a throttle limit for a specific domain
+            </summary>
+            <param name="hostName">The http host (domain name).</param>
+            <param name="crawlRate">The maximum frequency of http requests for the given hostName.</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.UnScrape``1(System.Boolean)">
+            <summary>
+            Retrieves native C# objects which were saved using the WebScraper.Scrape method in the JsonLines format.
+            </summary>
+            <typeparam name="T">The Type of object to be returned.  Giving no value will return an IEnumberable of IronWebScraper.ScrapedData </typeparam>
+            <param name="IgnoreErrors">if set to <c>true</c> any objects that cant be cast to the specified Type T will be ignored..</param>
+            <returns></returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.UnScrape(System.Boolean)">
+            <summary>
+            Retrieves IronWebScraper.ScrapedData objects which were saved using the WebScraper.Scrape method.
+            </summary>
+            <param name="IgnoreErrors">if set to <c>true</c> any objects that cant be cast to the specified Type T will be ignored..</param>
+            <returns></returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.UnScrape(System.String,System.Boolean)">
+            <summary>
+            Retrieves IronWebScraper.ScrapedData objects which were saved using the WebScraper.Scrape method.
+            </summary>
+            <param name="fileName">Path of the saved data file.</param>
+            <param name="IgnoreErrors">if set to <c>true</c> any objects that cant be cast to the specified Type T will be ignored..</param>
+            <returns></returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.UnScrape``1(System.String,System.Boolean)">
+            <summary>
+            Retrieves native C# objects which were saved using the WebScraper.Scrape method in the JsonLines format.
+            </summary>
+            <typeparam name="T">The Type of object to be returned.  Giving no value will return an IEnumberable of IronWebScraper.ScrapedData </typeparam>
+            <param name="fileName">Path of the saved data file.</param>
+            <param name="IgnoreErrors">if set to <c>true</c> any objects that cant be cast to the specified Type T will be ignored..</param>
+            <returns></returns>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Scrape(System.Object,System.String)">
+            <summary>
+            Appends any scraped data to a file in the JsonLines format. (1 json object per line).
+            Will save any .Net object of any kind.  This method is typically used with IronWebScraper.ScrapedData or developer defined classes for scraped data items. 
+            The default filename will follow the pattern  "NameSpace.TypeName.jsonl".  E.g:   IronWebScraper.ScrapedData.jsonl
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.ScrapeUnique(System.Object,System.String)">
+            <summary>
+            Appends scraped data to a file in the JsonLines format. (1 json object per line).  Automatically ignores duplicates.
+            Will save any .Net object of any kind.  This method is typically used with IronWebScraper.ScrapedData or developer defined classes for scraped data items. 
+            The default filename will follow the pattern  "WorkingDirecory/NameSpace.TypeName.jsonl".  E.g:   Scrape/IronWebScraper.ScrapedData.jsonl
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Retry(IronWebScraper.Response)">
+            <summary>
+              Retries a Response. 
+              <para>Usually called in a Parse method, this method is useful if a Captcha or error screen was encountered during Html parsing.</para>
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Request(System.Collections.Generic.IEnumerable{System.String},System.Action{IronWebScraper.Response})">
+            <summary>
+            A key method called from with the Init and Parse Methods.  Request adds new requests to the scrape-job queue, and decides which method (e.g. Parse) will be used to parse the Response object.
+            </summary>
+            <param name="urls">The Absolute url or urls to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse) </param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.PostRequest(System.String,System.Action{IronWebScraper.Response},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Request adds a new request to the scrape-job queue using the POST http method.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+            <param name="postVaraibles">The POST variables as a dictionary of key-value pairs.</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.PostRequest(System.String,System.Action{IronWebScraper.Response},System.Collections.Generic.Dictionary{System.String,System.String},IronWebScraper.MetaData)">
+            <summary>
+            Request adds a new request to the scrape-job queue using the POST http method.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+            <param name="postVaraibles">The POST variables as a dictionary of key-value pairs.</param>
+            <param name="metaData">Additional information of any Type can be sent with the request and then re-read when the response is parsed .</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.PostRequest(System.String,System.Action{IronWebScraper.Response},System.Collections.Generic.Dictionary{System.String,System.String},IronWebScraper.HttpIdentity,IronWebScraper.MetaData)">
+            <summary>
+            Request adds a new request to the scrape-job queue using the POST http method.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+            <param name="postVaraibles">The POST variables as a dictionary of key-value pairs.</param>
+            <param name="identity">An optional HttpIdentity to send the Request.  If null, the ChooseIdentityForRequest method will be used to find a suitable identity.</param>
+            <param name="metaData">Additional information of any Type can be sent with the request and then re-read when the response is parsed .</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.PostRequest(System.Uri,System.Action{IronWebScraper.Response},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Request adds a new request to the scrape-job queue using the POST http method.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+            <param name="postVaraibles">The POST variables as a dictionary of key-value pairs.</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.PostRequest(System.Uri,System.Action{IronWebScraper.Response},System.Collections.Generic.Dictionary{System.String,System.String},IronWebScraper.MetaData)">
+            <summary>
+            Request adds a new request to the scrape-job queue using the POST http method.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+            <param name="postVaraibles">The POST variables as a dictionary of key-value pairs.</param>
+            <param name="metaData">Additional information of any Type can be sent with the request and then re-read when the response is parsed .</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.PostRequest(System.Uri,System.Action{IronWebScraper.Response},System.Collections.Generic.Dictionary{System.String,System.String},IronWebScraper.HttpIdentity,IronWebScraper.MetaData)">
+            <summary>
+            Request adds a new request to the scrape-job queue using the POST http method.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+            <param name="postVaraibles">The POST variables as a dictionary of key-value pairs.</param>
+            <param name="identity">An optional HttpIdentity to send the Request.  If null, the ChooseIdentityForRequest method will be used to find a suitable identity.</param>
+            <param name="metaData">Additional information of any Type can be sent with the request and then re-read when the response is parsed .</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Request(System.String,System.Action{IronWebScraper.Response})">
+            <summary>
+            A key method called from with the Init and Parse Methods.  Request adds a new request to the scrape-job queue, and decides which method (e.g. Parse) will be used to parse the Response object.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Request(System.String,System.Action{IronWebScraper.Response},IronWebScraper.MetaData)">
+            <summary>
+            A key method called from with the Init and Parse Methods.  Request adds a new request to the scrape-job queue, and decides which method (e.g. Parse) will be used to parse the Response object.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+            <param name="metaData">Additional information of any Type can be sent with the request and then re-read when the response is parsed .</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Request(System.String,System.Action{IronWebScraper.Response},IronWebScraper.HttpIdentity,IronWebScraper.MetaData)">
+            <summary>
+            A key method called from with the Init and Parse Methods.  Request adds a new request to the scrape-job queue, and decides which method (e.g. Parse) will be used to parse the Response object.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse) </param>
+            <param name="identity">An HttpIdentity to send the Request.  If null, the ChooseIdentityForRequest method will be used to find a suitable identity.</param>
+            <param name="metaData">Additional information of any Type can be sent with the request and then re-read when the response is parsed .</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Request(System.Uri,System.Action{IronWebScraper.Response})">
+            <summary>
+            A key method called from with the Init and Parse Methods.  Request adds a new request to the scrape-job queue, and decides which method (e.g. Parse) will be used to parse the Response object.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Request(System.Uri,System.Action{IronWebScraper.Response},IronWebScraper.MetaData)">
+            <summary>
+            A key method called from with the Init and Parse Methods.  Request adds a new request to the scrape-job queue, and decides which method (e.g. Parse) will be used to parse the Response object.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse)</param>
+            <param name="metaData">Additional information of any Type can be sent with the request and then re-read when the response is parsed .</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Request(System.Uri,System.Action{IronWebScraper.Response},IronWebScraper.HttpIdentity,IronWebScraper.MetaData)">
+            <summary>
+            A key method called from with the Init and Parse Methods.  Request adds a new request to the scrape-job queue, and decides which method (e.g. Parse) will be used to parse the Response object.
+            </summary>
+            <param name="url">The absolute url to be fetched.  Developers may use Response.ToAbsoluteUrl to resolve all relative links to Absolute Url strings.</param>
+            <param name="parse">The method to be used to parse the Response (often this is WebScraper.Parse) </param>
+            <param name="identity">An HttpIdentity to send the Request.  If null, the ChooseIdentityForRequest method will be used to find a suitable identity.</param>
+            <param name="metaData">Additional information of any Type can be sent with the request and then re-read when the response is parsed .</param>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Stop">
+            <summary>
+            Stops this WebScraper instance graceful.
+            The WebScraper may be restated later with no loss of data by calling Start(CrawlId) or StartAsync(CrawlId)
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.StartAsync(System.String)">
+            <summary>
+            Starts the WebScraper Asynchronously.  Set CrawlId to  make this crawl resumable. Will resume a previous scrawl with the same CrawlId if it exists.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.WebScraper.Start(System.String)">
+            <summary>
+            Starts the WebScraper.  
+            <para>Set CrawlId to  make this crawl resumable. Will also resume a previous scrawl with the same CrawlId if it exists.</para>
+            <para>Giving a CrawlId also causes the WebScraper to auto-save its state every 5 minutes in case of a crash, system failure or power outage.  
+            This feature is particularly useful for long running web-scraping tasks, allowing hours, days or even weeks of work to be recovered effortlessly.</para>
+            </summary>
+        </member>
+        <member name="T:IronWebScraper.WebScraper.Throttle">
+            <summary>
+            Throttle remote clients by their host name or by their public IP address.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.Throttle.ByIpAddress">
+            <summary>
+            Identify unique hosts by resolving the IP address for each host in-case multiple host names share an IP address.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.Throttle.ByDomainHostName">
+            <summary>
+            Identify unique hosts by their host name
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.WebScraper.MaxHttpConnectionLimit">
+            <summary>
+            Gets or sets the total number of allowed open HTTP requests (threads)
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.WebScraper.ThrottleMode">
+            <summary>
+            Makes the WebSraper intelligently throttle requests not only by hostname, but also by host servers' IP addresses.  This is polite in-case multiple scraped domains are hosted on the same machine.
+            </summary>
+            <value>
+            <c>true</c> if we wish to look up hosts' IP addresses for throttling ; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:IronWebScraper.WebScraper.RateLimitPerHost">
+            <summary>
+            Gets or sets minimum polite delay (pause) between request to a given domain or IP address.
+            </summary>
+            
+        </member>
+        <member name="P:IronWebScraper.WebScraper.HttpTimeOut">
+            <summary>
+            Gets or the time after-which a HTTP request will be considered failed or lost.
+            (non-contactable or Dns unavailable)
+            </summary>
+            
+        </member>
+        <member name="P:IronWebScraper.WebScraper.HttpRetryAttempts">
+            <summary>
+            The number of times WebScraper will retry a failed URL (normally with a new identity) before considering it non-scrapable.
+            </summary>
+            
+        </member>
+        <member name="P:IronWebScraper.WebScraper.OpenConnectionLimitPerHost">
+            <summary>
+            Gets or sets the allowed number of concurrent HTTP requests (threads) per hostname or IP address.  This helps protect hosts against too many requests.
+            </summary>
+            
+        </member>
+        <member name="F:IronWebScraper.WebScraper.AutoSaveInterval">
+            <summary>
+            Rate at which the webscraper's crawl state will be Auto-saved  (for crash recovery) when it is started with a CrawlId.
+            Set to null to never autosave.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.ObeyRobotsDotTxt">
+            <summary>
+            Causes the WebScraper to always obey /robots.txt directives including url and path restrictions and crawl rates.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.Identities">
+            <summary>
+            A list of http identities to be used to fetch web resources.
+            <para>Each Identity may have a different proxy IP addresses, userAgent, http headers, persistent cookies, username and password.</para> 
+            <para>Best practice is to create Identities in your WebScraper.Init Method and Add them to this WebScraper.Identities List.</para>
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.AllowedUrls">
+            <summary>
+            If not empty, all requested Urls must match at least one of the AllowedUrls patterns.
+            Patterns may be added using glob wildcard strings or Regex
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.BannedUrls">
+            <summary>
+            If not empty, no requested Urls may match any of the BannedUrls patterns.
+            Patterns may be added using glob wildcard strings or Regex
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.AllowedDomains">
+            <summary>
+            If not empty, all requested Urls' hostname must match at least one of the AllowedDomains patterns.
+            Patterns may be added using glob wildcard strings or Regex
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.WebScraper.BannedDomains">
+            <summary>
+            If not empty, no requested Urls' hostname may match any of the BannedDomains patterns.
+            Patterns may be added using glob wildcard strings or Regex
+            </summary>
+        </member>
+        <member name="T:IronWebScraper.HttpIdentity">
+            <summary>
+            A class defining the browsing 'identity' to be used to fetch a given Url.
+            Contains Proxy, UserAgent and Http Header information.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.HttpIdentity.DefaultHttpRequestHeaders">
+            <summary>
+            Default HTTP request headers to be assigned to every new identity.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.HttpIdentity.httpClientHandler">
+            <summary>
+            HTTPs the client handler.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:IronWebScraper.HttpIdentity.ProxyFailureCount">
+            <summary>
+            Gets the number of times this proxy has failed.
+            </summary>
+            <value>
+            The proxy failure count.
+            </value>
+        </member>
+        <member name="F:IronWebScraper.HttpIdentity.Proxy">
+            <summary>
+            A proxy string such as "102.192.92.192:8088" or "username:password@102.192.92.192"
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.HttpIdentity.UserAgent">
+            <summary>
+            A default User-Agent header string.  E.g: "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36".
+            <para>Find examples online at: http://www.useragentstring.com/pages/useragentstring.php</para> 
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HttpIdentity.Cookies">
+            <summary>
+            A "Cookie Jar" which persists http cookies for this browser identity.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.HttpIdentity.UseCookies">
+            <summary>
+            Stores a "Cookie Jar" which persists http cookies for this browser identity.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.HttpIdentity.HttpRequestHeaders">
+            <summary>
+            The default headers which will be sent with all http Requests for this identity.
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.HttpIdentity.NetworkUsername">
+            <summary>
+            The network/http username to be used for user authentication. Supports Http , Windows networks,  NTLM , Keroberos , Linux networks,  BSD networks and Mac  OS X networks.
+            <para>See also NetworkPassword, NetworkDomain</para>
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.HttpIdentity.NetworkPassword">
+            <summary>
+            The network/http password to be used for user authentication. Supports Http , Windows networks,  NTLM , Keroberos , Linux networks,  BSD networks and Mac OS X networks.
+            <para>See also NetworkUsername, NetworkDomain</para>
+            </summary>
+        </member>
+        <member name="F:IronWebScraper.HttpIdentity.NetworkDomain">
+            <summary>
+            The network domain  to be used for user authentication. Supports Windows,  NTLM , Keroberos, Linux,  BSD  and Mac OS X networks.
+            <para>See also NetworkUsername, NetworkPassword</para>
+            </summary>
+        </member>
+        <member name="P:IronWebScraper.HttpIdentity.NetworkLoginCredential">
+            <summary>
+            Returns the System.Net.NetworkCredential which will be used on for networks and http authentication  (Supports: Windows / NTLM / Keroberos / Linux / BSD / Mac)
+            </summary>
+        </member>
+        <member name="T:IronWebScraper.Urls.UrlMatchPatternCollection">
+            <summary>
+            A class used for control URL, Domain and File type access using positive and negative wild-card(*?) and Regex rules.
+            </summary>
+        </member>
+        <member name="M:IronWebScraper.Urls.UrlMatchPatternCollection.Add(System.String)">
+            <summary>
+            Adds a match pattern using strings with wild-card.
+            <para>? matches exactly 1 character</para>
+            <para>* matches exactly zero to any number of characters</para>
+            </summary>
+            <param name="WildCardPattern">The wild-card pattern.</param>
+        </member>
+        <member name="M:IronWebScraper.Urls.UrlMatchPatternCollection.Add(System.String[])">
+            <summary>
+            Adds multiple match patterns using strings with wild-card.
+            <para>? matches exactly 1 character</para>
+            <para>* matches exactly zero to any number of characters</para>
+            </summary>
+            <param name="WildCardPatterns">The wild-card patterns.</param>
+        </member>
+        <member name="M:IronWebScraper.Urls.UrlMatchPatternCollection.WildcardToRegex(System.String)">
+            <summary>
+            Adds a match pattern using strings using System.Text.Regex
+            </summary>
+            <param name="pattern">The  Regex</param>
+        </member>
+    </members>
+</doc>
