@@ -56,7 +56,6 @@ namespace GpuLookup.Scraper
                     }
                 }
                 page++;
-                //test
             }
             Console.ReadLine();
         }
