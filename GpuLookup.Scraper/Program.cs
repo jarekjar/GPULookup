@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -33,10 +34,11 @@ namespace GpuLookup.Scraper
                 }
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-title");
+                string connectionString = ConfigurationManager.ConnectionStrings["mainConnectionString"].ConnectionString;
                 foreach (var item in items)
                 {
                     Console.WriteLine(item.TextContent);
-                    using (SqlConnection connection = new SqlConnection("Data Source=localhost;Initial Catalog=GpuLookup;Integrated Security = true"))
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         try
                         {
