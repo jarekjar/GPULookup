@@ -39,6 +39,7 @@ namespace GpuLookup.Parser
                     titleWords[0] = "";
                     gpu.ChipName = String.Join(" ", titleWords);
                     gpus.Add(gpu);
+                    gpu = new GPU();
                 }
                 reader.Close();
             }
@@ -51,24 +52,24 @@ namespace GpuLookup.Parser
 
         private static void InsertGpus(List<GPU> gpus, string conString)
         {
-            using (SqlConnection connection = new SqlConnection(conString))
+            foreach (var gpu in gpus)
             {
-                try
+                using (SqlConnection connection = new SqlConnection(conString))
                 {
-                    connection.Open();
-                    string sql = "INSERT INTO TEST_TABLE_SPECIFICS (manufacturer, chip_name) VALUES(@manufacturer, @chip_name)";
-                    SqlCommand cmd = new SqlCommand(sql, connection);
-                    foreach(var gpu in gpus)
+                    try
                     {
+                        connection.Open();
+                        string sql = "INSERT INTO TEST_TABLE_SPECIFICS (manufacturer, chip_name) VALUES(@manufacturer, @chip_name)";
+                        SqlCommand cmd = new SqlCommand(sql, connection);
                         cmd.Parameters.Add("@manufacturer", SqlDbType.NVarChar).Value = gpu.Manufacturer;
                         cmd.Parameters.Add("@chip_name", SqlDbType.NVarChar).Value = gpu.ChipName;
                         cmd.CommandType = CommandType.Text;
                         cmd.ExecuteNonQuery();
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
         }
