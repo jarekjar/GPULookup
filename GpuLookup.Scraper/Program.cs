@@ -16,8 +16,6 @@ namespace GpuLookup.Scraper
     {
         static void Main(string[] args)
         {
-            var gpus = new List<GPU>();
-            GPU gpu = null;
             var parser = new HtmlParser();
             var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
             WebClient webClient = new WebClient();
@@ -45,7 +43,7 @@ namespace GpuLookup.Scraper
                             connection.Open();
                             string sql = "INSERT INTO TEST_TABLE(name) VALUES(@name)";
                             SqlCommand cmd = new SqlCommand(sql, connection);
-                            cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value = item.TextContent;
+                            cmd.Parameters.Add("@name", SqlDbType.NVarChar).Value = item.TextContent; 
                             cmd.CommandType = CommandType.Text;
                             cmd.ExecuteNonQuery();
                         }
@@ -59,9 +57,5 @@ namespace GpuLookup.Scraper
             }
             Console.ReadLine();
         }
-    }
-    class GPU
-    {
-        public string ImgTag { get; set; }
     }
 }
