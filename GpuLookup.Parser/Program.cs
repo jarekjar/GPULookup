@@ -42,9 +42,11 @@ namespace GpuLookup.Parser
                 }
                 reader.Close();
             }
-            Console.WriteLine("Finished.");
+            Console.WriteLine("Finished reading data, press enter to continue..");
             Console.ReadLine();
             InsertGpus(gpus, connectionString);
+            Console.WriteLine("Done!");
+            Console.ReadLine();
         }
 
         private static void InsertGpus(List<GPU> gpus, string conString)
@@ -58,8 +60,8 @@ namespace GpuLookup.Parser
                     SqlCommand cmd = new SqlCommand(sql, connection);
                     foreach(var gpu in gpus)
                     {
-                        cmd.Parameters.Add("@manufacturer", SqlDbType.NVarChar).Value = 
-                        cmd.Parameters.Add("@chip_name", SqlDbType.NVarChar).Value = 
+                        cmd.Parameters.Add("@manufacturer", SqlDbType.NVarChar).Value = gpu.Manufacturer;
+                        cmd.Parameters.Add("@chip_name", SqlDbType.NVarChar).Value = gpu.ChipName;
                         cmd.CommandType = CommandType.Text;
                         cmd.ExecuteNonQuery();
                     }
