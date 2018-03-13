@@ -132,7 +132,6 @@ namespace GpuLookup.Scraper
         {
             var parser = new HtmlParser();
             WebClient webClient = new WebClient();
-            var client = new HttpClient();
             var page = 1;
             var timeout = DateTime.Now;
             while (page < 5)
@@ -141,7 +140,7 @@ namespace GpuLookup.Scraper
                 string url = String.Format("http://www.bestbuy.com/site/searchpage.jsp?cp={0}&searchType=search&_dyncharset=UTF-8&ks=960&sc=Global&list=y&usc=All%20Categories&type=page&id=pcat17071&iht=n&seeAll=&browsedCategory=abcat0507002&st=categoryid%24abcat0507002&qp=&sp=-bestsellingsort%20skuidsaas", page);
                 
                 Task.Run(async () => {
-                    result = await client.GetStringAsync(url);
+                    result = await webClient.DownloadStringTaskAsync(url);
                     var document = parser.Parse(result);
                     var items = document.QuerySelectorAll(".list-item");
                     if (items.Length == 0)

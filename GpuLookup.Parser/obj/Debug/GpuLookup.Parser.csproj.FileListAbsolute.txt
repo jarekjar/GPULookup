@@ -1,7 +1,0 @@
-C:\SF.Code\GpuLookup\GpuLookup.Parser\bin\Debug\GpuLookup.Parser.exe.config
-C:\SF.Code\GpuLookup\GpuLookup.Parser\bin\Debug\GpuLookup.Parser.exe
-C:\SF.Code\GpuLookup\GpuLookup.Parser\bin\Debug\GpuLookup.Parser.pdb
-C:\SF.Code\GpuLookup\GpuLookup.Parser\obj\Debug\GpuLookup.Parser.csprojResolveAssemblyReference.cache
-C:\SF.Code\GpuLookup\GpuLookup.Parser\obj\Debug\GpuLookup.Parser.csproj.CoreCompileInputs.cache
-C:\SF.Code\GpuLookup\GpuLookup.Parser\obj\Debug\GpuLookup.Parser.exe
-C:\SF.Code\GpuLookup\GpuLookup.Parser\obj\Debug\GpuLookup.Parser.pdb
