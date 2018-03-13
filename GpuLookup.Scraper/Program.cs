@@ -35,8 +35,17 @@ namespace GpuLookup.Scraper
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-info");
                 if (items.Length == 0)
-                {
-                    Console.WriteLine("You got captcha detected my dude."); 
+                { 
+                    Console.WriteLine("***************************************************************");
+                    Console.WriteLine("***************************************************************");
+                    Console.WriteLine("***************************************************************");
+                    Console.WriteLine("***************************************************************");
+                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
+                    Console.WriteLine("***************************************************************");
+                    Console.WriteLine("***************************************************************");
+                    Console.WriteLine("***************************************************************");
+                    Console.WriteLine("***************************************************************");
+                    Console.ReadLine();
                 } 
                 GPU gpu = null;
                 string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
