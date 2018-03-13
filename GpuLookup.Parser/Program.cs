@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -12,14 +13,14 @@ namespace GpuLookup.Parser
     {
         static void Main()
         {
-            string str = "Data Source=localhost;Initial Catalog=GpuLookup;Integrated Security=True";
             Console.WriteLine("Press enter to begin.");
             Console.ReadLine();
-            ParseTitles(str);
+            ParseTitles();
         }
 
-        private static void ParseTitles(string connectionString)
+        private static void ParseTitles()
         {
+            string connectionString = ConfigurationManager.ConnectionStrings[0].ConnectionString;
             var gpu = new GPU();
             List<GPU> gpus = null;
             string queryString = "SELECT * FROM TEST_TABLE";

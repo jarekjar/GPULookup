@@ -1,1 +1,6 @@
 .vs/
+
+./vscode
+bin/
+obj/
+packages/
