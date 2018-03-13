@@ -15,7 +15,17 @@ namespace GpuLookup.Scraper
 {
     class Program
     {
+        static string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
         static void Main(string[] args)
+        {
+            //NeweggScrape();
+            //AmazonScrape();
+            MicrocenterScrape();
+            Console.WriteLine("Completed.");
+            Console.ReadLine();
+        }
+
+        static void NeweggScrape()
         {
             var parser = new HtmlParser();
             var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
@@ -36,40 +46,108 @@ namespace GpuLookup.Scraper
                 var items = document.QuerySelectorAll(".item-info");
                 if (items.Length == 0)
                 {
-                    Console.WriteLine("You got captcha detected my dude."); 
-                } 
+                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
+                    Console.ReadLine();
+                }
                 GPU gpu = null;
-                string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
                 foreach (var item in items)
                 {
                     gpu = new GPU();
                     gpu.Card = item.QuerySelector(".item-title").TextContent;
-                    if(item.QuerySelector(".price-current > strong") != null)
-                    gpu.Price = Double.Parse(item.QuerySelector(".price-current > strong").TextContent) + Double.Parse(item.QuerySelector(".price-current > sup").TextContent);
+                    if (item.QuerySelector(".price-current > strong") != null)
+                        gpu.Price = Double.Parse(item.QuerySelector(".price-current > strong").TextContent) + Double.Parse(item.QuerySelector(".price-current > sup").TextContent);
                     gpu.Source = "Newegg";
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        try
-                        {
-                            connection.Open();
-                            Console.WriteLine("Inserting " + gpu.Card + " into the database.");
-                            string sql = "INSERT INTO GPUS(chip, price, source) VALUES(@chip, @price, @source)";
-                            SqlCommand cmd = new SqlCommand(sql, connection);
-                            cmd.Parameters.Add("@chip", SqlDbType.NVarChar).Value = gpu.Card;
-                            cmd.Parameters.Add("@price", SqlDbType.Money).Value = gpu.Price;
-                            cmd.Parameters.Add("@source", SqlDbType.NVarChar).Value = gpu.Source;
-                            cmd.CommandType = CommandType.Text;
-                            cmd.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                    }
+                    SQLInsert(gpu);
                 }
                 page++;
             }
-            Console.ReadLine();
+        }
+        static void AmazonScrape()
+        {
+            var parser = new HtmlParser();
+            var page1 = "https://www.amazon.com/Graphics-Cards-Computer-Add-Ons-Computers/b/ref=dp_bc_4?ie=UTF8&node=284822";
+            WebClient webClient = new WebClient();
+            var page = 1;
+            while (page < 40)
+            {
+                string result = null;
+                result = webClient.DownloadString(page1 + "&page=" + page);
+                var document = parser.Parse(result);
+                var items = document.QuerySelectorAll(".s-item-container");
+                if (items.Length == 0)
+                {
+                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
+                    Console.ReadLine();
+                }
+                GPU gpu = null;
+                foreach (var item in items)
+                {
+                    gpu = new GPU();
+                    if (item.QuerySelector(".s-access-title") != null)
+                        gpu.Card = item.QuerySelector(".s-access-title").TextContent;
+                    else
+                        continue;
+                    if (item.QuerySelector(".sx-price-whole") != null)
+                        gpu.Price = Double.Parse(item.QuerySelector(".sx-price-whole").TextContent) + Double.Parse(item.QuerySelector(".sx-price-fractional").TextContent);
+                    gpu.Source = "Amazon";
+                    SQLInsert(gpu);
+                }
+                page++;
+            }
+        }
+        static void MicrocenterScrape()
+        {
+            var parser = new HtmlParser();
+            var page1 = "http://www.microcenter.com/search/search_results.aspx?N=4294966937&NTK=all&cat=Video-Cards-:-Video-Cards,-TV-Tuners-:-Computer-Parts-:-MicroCenter";
+            WebClient webClient = new WebClient();
+            var page = 7;
+            while (page < 8)
+            {
+                string result = null;
+                result = webClient.DownloadString(page1 + "&page=" + page);
+                var document = parser.Parse(result);
+                var items = document.QuerySelectorAll(".product_wrapper");
+                if (items.Length == 0)
+                {
+                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
+                    Console.ReadLine();
+                }
+                GPU gpu = null;
+                foreach (var item in items)
+                {
+                    gpu = new GPU();
+                    if (item.QuerySelector(".normal > h2 > a") != null)
+                        gpu.Card = item.QuerySelector(".normal > h2 > a").GetAttribute("data-name");
+                    else
+                        continue;
+                    gpu.Price = Double.Parse(item.QuerySelector(".normal > h2 > a").GetAttribute("data-price"));
+                    gpu.Source = "Microcenter";
+                    SQLInsert(gpu);
+                }
+                page++;
+            }
+        }
+        static void SQLInsert(GPU gpu)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    Console.WriteLine("Inserting " + gpu.Card + " into the database.");
+                    string sql = "INSERT INTO GPUS(chip, price, source) VALUES(@chip, @price, @source)";
+                    SqlCommand cmd = new SqlCommand(sql, connection);
+                    cmd.Parameters.Add("@chip", SqlDbType.NVarChar).Value = gpu.Card;
+                    cmd.Parameters.Add("@price", SqlDbType.Money).Value = gpu.Price;
+                    cmd.Parameters.Add("@source", SqlDbType.NVarChar).Value = gpu.Source;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
         }
         class GPU
         {
