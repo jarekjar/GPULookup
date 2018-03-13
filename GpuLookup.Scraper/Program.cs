@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -131,42 +132,44 @@ namespace GpuLookup.Scraper
         {
             var parser = new HtmlParser();
             WebClient webClient = new WebClient();
-            webClient.Headers.Add("Accept", "*/*");
-            webClient.Headers.Add("User-Agent", "curl/7.58.0");
+            var client = new HttpClient();
             var page = 1;
+            var timeout = DateTime.Now;
             while (page < 5)
             {
                 string result = null;
                 string url = String.Format("http://www.bestbuy.com/site/searchpage.jsp?cp={0}&searchType=search&_dyncharset=UTF-8&ks=960&sc=Global&list=y&usc=All%20Categories&type=page&id=pcat17071&iht=n&seeAll=&browsedCategory=abcat0507002&st=categoryid%24abcat0507002&qp=&sp=-bestsellingsort%20skuidsaas", page);
-                try
+                
+                Task.Run(async () => {
+                    result = await client.GetStringAsync(url);
+                    var document = parser.Parse(result);
+                    var items = document.QuerySelectorAll(".list-item");
+                    if (items.Length == 0)
+                    {
+                        Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
+                        Console.ReadLine();
+                    }
+                    GPU gpu = null;
+                    foreach (var item in items)
+                    {
+                        gpu = new GPU();
+                        if (item != null)
+                            gpu.Card = item.GetAttribute("data-title");
+                        else
+                            continue;
+                        gpu.Price = Double.Parse(item.GetAttribute("data-price"));
+                        gpu.Source = "Best Buy";
+                        SQLInsert(gpu);
+                    }
+                    page++;
+                });
+
+                if(DateTime.Now - timeout > TimeSpan.FromSeconds(10))
                 {
-                    result = webClient.DownloadString(url);
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Timed out after 10 seconds.");
                     Console.ReadLine();
+                    break;
                 }
-                var document = parser.Parse(result);
-                var items = document.QuerySelectorAll(".list-item");
-                if (items.Length == 0)
-                {
-                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
-                    Console.ReadLine();
-                }
-                GPU gpu = null;
-                foreach (var item in items)
-                {
-                    gpu = new GPU();
-                    if (item != null)
-                        gpu.Card = item.GetAttribute("data-title");
-                    else
-                        continue;
-                    gpu.Price = Double.Parse(item.GetAttribute("data-price"));
-                    gpu.Source = "Best Buy";
-                    SQLInsert(gpu);
-                }
-                page++;
             }
         }
         static void SQLInsert(GPU gpu)
