@@ -20,11 +20,11 @@ namespace GpuLookup.Scraper
         {
             //NeweggScrape();
             //AmazonScrape();
-            MicrocenterScrape();
+            //MicrocenterScrape();
+            BestBuyScrape();
             Console.WriteLine("Completed.");
             Console.ReadLine();
         }
-
         static void NeweggScrape()
         {
             var parser = new HtmlParser();
@@ -100,7 +100,7 @@ namespace GpuLookup.Scraper
             var parser = new HtmlParser();
             var page1 = "http://www.microcenter.com/search/search_results.aspx?N=4294966937&NTK=all&cat=Video-Cards-:-Video-Cards,-TV-Tuners-:-Computer-Parts-:-MicroCenter";
             WebClient webClient = new WebClient();
-            var page = 7;
+            var page = 1;
             while (page < 8)
             {
                 string result = null;
@@ -122,6 +122,48 @@ namespace GpuLookup.Scraper
                         continue;
                     gpu.Price = Double.Parse(item.QuerySelector(".normal > h2 > a").GetAttribute("data-price"));
                     gpu.Source = "Microcenter";
+                    SQLInsert(gpu);
+                }
+                page++;
+            }
+        }
+        static void BestBuyScrape()
+        {
+            var parser = new HtmlParser();
+            WebClient webClient = new WebClient();
+            webClient.Headers.Add("Accept", "*/*");
+            webClient.Headers.Add("User-Agent", "curl/7.58.0");
+            var page = 1;
+            while (page < 5)
+            {
+                string result = null;
+                string url = String.Format("http://www.bestbuy.com/site/searchpage.jsp?cp={0}&searchType=search&_dyncharset=UTF-8&ks=960&sc=Global&list=y&usc=All%20Categories&type=page&id=pcat17071&iht=n&seeAll=&browsedCategory=abcat0507002&st=categoryid%24abcat0507002&qp=&sp=-bestsellingsort%20skuidsaas", page);
+                try
+                {
+                    result = webClient.DownloadString(url);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.ReadLine();
+                }
+                var document = parser.Parse(result);
+                var items = document.QuerySelectorAll(".list-item");
+                if (items.Length == 0)
+                {
+                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
+                    Console.ReadLine();
+                }
+                GPU gpu = null;
+                foreach (var item in items)
+                {
+                    gpu = new GPU();
+                    if (item != null)
+                        gpu.Card = item.GetAttribute("data-title");
+                    else
+                        continue;
+                    gpu.Price = Double.Parse(item.GetAttribute("data-price"));
+                    gpu.Source = "Best Buy";
                     SQLInsert(gpu);
                 }
                 page++;
