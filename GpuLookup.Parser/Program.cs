@@ -20,7 +20,7 @@ namespace GpuLookup.Parser
 
         private static void ParseTitles()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["mainConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[0].ConnectionString;
             var gpu = new GPU();
             List<GPU> gpus = null;
             string queryString = "SELECT * FROM TEST_TABLE";
