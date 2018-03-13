@@ -17,6 +17,13 @@ namespace GpuLookup.Scraper
     {
         static void Main(string[] args)
         {
+            NeweggScrape();
+            Console.WriteLine("Completed.");
+            Console.ReadLine();
+        }
+
+        static void NeweggScrape()
+        {
             var parser = new HtmlParser();
             var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
             WebClient webClient = new WebClient();
@@ -35,26 +42,18 @@ namespace GpuLookup.Scraper
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-info");
                 if (items.Length == 0)
-                { 
-                    Console.WriteLine("***************************************************************");
-                    Console.WriteLine("***************************************************************");
-                    Console.WriteLine("***************************************************************");
-                    Console.WriteLine("***************************************************************");
+                {
                     Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
-                    Console.WriteLine("***************************************************************");
-                    Console.WriteLine("***************************************************************");
-                    Console.WriteLine("***************************************************************");
-                    Console.WriteLine("***************************************************************");
                     Console.ReadLine();
-                } 
+                }
                 GPU gpu = null;
                 string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
                 foreach (var item in items)
                 {
                     gpu = new GPU();
                     gpu.Card = item.QuerySelector(".item-title").TextContent;
-                    if(item.QuerySelector(".price-current > strong") != null)
-                    gpu.Price = Double.Parse(item.QuerySelector(".price-current > strong").TextContent) + Double.Parse(item.QuerySelector(".price-current > sup").TextContent);
+                    if (item.QuerySelector(".price-current > strong") != null)
+                        gpu.Price = Double.Parse(item.QuerySelector(".price-current > strong").TextContent) + Double.Parse(item.QuerySelector(".price-current > sup").TextContent);
                     gpu.Source = "Newegg";
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
@@ -78,7 +77,6 @@ namespace GpuLookup.Scraper
                 }
                 page++;
             }
-            Console.ReadLine();
         }
         class GPU
         {
