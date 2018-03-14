@@ -32,6 +32,7 @@ namespace GpuLookup.Scraper
             BestBuyScrape();
             Console.WriteLine("Completed.");
             Console.ReadLine();
+            //wow.
         }
         static void NeweggScrape()
         {
