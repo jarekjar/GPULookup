@@ -16,6 +16,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Extensions;
 using AngleSharp.Parser.Html;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 
 namespace GpuLookup.Scraper
 {
@@ -26,10 +29,12 @@ namespace GpuLookup.Scraper
         {
             Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
             Console.ReadLine();
+            TruncateTable();
             NeweggScrape();
-            //AmazonScrape();
-            //MicrocenterScrape();
-            //BestBuyScrape();
+            AmazonScrape();
+            MicrocenterScrape();
+            BestBuyScrape();
+            FilterDuplicates();
             Console.WriteLine("Completed.");
             Console.ReadLine();
         }
@@ -37,19 +42,23 @@ namespace GpuLookup.Scraper
         {
             var parser = new HtmlParser();
             var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
-            WebClient webClient = new WebClient();
-            webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36");
+            ChromeOptions option = new ChromeOptions();
+            IWebDriver chromeDriver = new ChromeDriver(option);
+            string result = null;
             var page = 1;
             while (page < 60)
             {
-                string result = null;
                 if (page == 1)
                 {
-                    result = await webClient.DownloadStringTaskAsync(page1);
+                    chromeDriver.Url = page1;
+                    Console.WriteLine("Complete the captcha, then press enter to continue.");
+                    Console.ReadLine();
+                    result = chromeDriver.PageSource;
                 }
                 else
                 {
-                    result = await webClient.DownloadStringTaskAsync(page1 + "Page-" + page);
+                    chromeDriver.Url = page1 + "Page-" + page;
+                    result = chromeDriver.PageSource;
                 }
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-info");
@@ -70,17 +79,20 @@ namespace GpuLookup.Scraper
                 }
                 page++;
             }
+            chromeDriver.Close();
         }
         static async Task AmazonScrape()
         {
             var parser = new HtmlParser();
             var page1 = "https://www.amazon.com/Graphics-Cards-Computer-Add-Ons-Computers/b/ref=dp_bc_4?ie=UTF8&node=284822";
-            WebClient webClient = new WebClient();
+            ChromeOptions option = new ChromeOptions();
+            IWebDriver chromeDriver = new ChromeDriver(option);
             var page = 1;
             while (page < 40)
             {
                 string result = null;
-                result = await webClient.DownloadStringTaskAsync(page1 + "&page=" + page);
+                chromeDriver.Url = page1 + "&page=" + page;
+                result = chromeDriver.PageSource;
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".s-item-container");
                 if (items.Length == 0)
@@ -103,6 +115,7 @@ namespace GpuLookup.Scraper
                 }
                 page++;
             }
+            chromeDriver.Close();
         }
         static async Task MicrocenterScrape()
         {
@@ -257,6 +270,30 @@ Accept-Language: en-US,en;q=0.9
                 {
                     Console.WriteLine(ex.Message);
                 }
+            }
+        }
+        static void FilterDuplicates()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("GPUS_deleteDuplicates", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                conn.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+        static void TruncateTable()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("TRUNCATE TABLE GPUS", conn)
+            {
+                CommandType = CommandType.Text
+            })
+            {
+                conn.Open();
+                command.ExecuteNonQuery();
             }
         }
         class GPU
