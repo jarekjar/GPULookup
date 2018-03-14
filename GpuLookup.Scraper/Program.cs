@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Security;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,12 +24,15 @@ namespace GpuLookup.Scraper
         static string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
         static void Main(string[] args)
         {
-            //NeweggScrape();
-            //AmazonScrape();
-            //MicrocenterScrape();
+            Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
+            Console.ReadLine();
+            NeweggScrape();
+            AmazonScrape();
+            MicrocenterScrape();
             BestBuyScrape();
             Console.WriteLine("Completed.");
             Console.ReadLine();
+            //wow.
         }
         static void NeweggScrape()
         {
@@ -133,41 +141,99 @@ namespace GpuLookup.Scraper
             var parser = new HtmlParser();
             WebClient webClient = new WebClient();
             var page = 1;
-            var timeout = DateTime.Now;
             while (page < 5)
             {
-                string result = null;
-                string url = String.Format("http://www.bestbuy.com/site/searchpage.jsp?cp={0}&searchType=search&_dyncharset=UTF-8&ks=960&sc=Global&list=y&usc=All%20Categories&type=page&id=pcat17071&iht=n&seeAll=&browsedCategory=abcat0507002&st=categoryid%24abcat0507002&qp=&sp=-bestsellingsort%20skuidsaas", page);
-                
-                Task.Run(async () => {
-                    result = await webClient.DownloadStringTaskAsync(url);
-                    var document = parser.Parse(result);
-                    var items = document.QuerySelectorAll(".list-item");
-                    if (items.Length == 0)
-                    {
-                        Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
-                        Console.ReadLine();
-                    }
-                    GPU gpu = null;
-                    foreach (var item in items)
-                    {
-                        gpu = new GPU();
-                        if (item != null)
-                            gpu.Card = item.GetAttribute("data-title");
-                        else
-                            continue;
-                        gpu.Price = Double.Parse(item.GetAttribute("data-price"));
-                        gpu.Source = "Best Buy";
-                        SQLInsert(gpu);
-                    }
-                    page++;
-                });
-
-                if(DateTime.Now - timeout > TimeSpan.FromSeconds(10))
+                var result = ComplicatedBestBuyScrape(page);
+                var document = parser.Parse(result);
+                var items = document.QuerySelectorAll(".list-item");
+                if (items.Length == 0)
                 {
-                    Console.WriteLine("Timed out after 10 seconds.");
+                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
                     Console.ReadLine();
-                    break;
+                }
+                GPU gpu = null;
+                foreach (var item in items)
+                {
+                    gpu = new GPU();
+                    if (item != null)
+                        gpu.Card = item.GetAttribute("data-title");
+                    else
+                        continue;
+                    gpu.Price = Double.Parse(item.GetAttribute("data-price"));
+                    gpu.Source = "Best Buy";
+                    SQLInsert(gpu);
+                }
+                page++;
+            }
+        }
+        static string ComplicatedBestBuyScrape(int i)
+        {
+            using (var tcpClient = new TcpClient())
+            {
+                tcpClient.Connect("www.bestbuy.com", 443);
+                using (var ssl = new SslStream(tcpClient.GetStream()))
+                {
+                    ssl.AuthenticateAsClient("www.bestbuy.com");
+                    var request = "GET /site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&cp=" + i + @"&nrp=24 HTTP/1.1
+Host: www.bestbuy.com
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+Referer: https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+";
+                    ssl.Write(Encoding.UTF8.GetBytes(request));
+                    ssl.Flush();
+                    Console.WriteLine("sent");
+                    // skip headers (look for 2 \r\n consecutively, per the HTTP spec)
+                    byte c1 = (byte)ssl.ReadByte();
+                    byte c2 = (byte)ssl.ReadByte();
+                    byte c3 = (byte)ssl.ReadByte();
+                    byte c4 = (byte)ssl.ReadByte();
+                    while (c1 != '\r' || c2 != '\n' || c3 != '\r' || c4 != '\n')
+                    {
+                        c1 = c2;
+                        c2 = c3;
+                        c3 = c4;
+                        c4 = (byte)ssl.ReadByte();
+                    }
+                    var chunks = new List<byte>();
+                    while (true)
+                    {
+                        // process chunked encoding
+                        var bytes = new List<byte>();
+                        while (bytes.Count < 2 || bytes[bytes.Count - 2] != '\r' || bytes[bytes.Count - 1] != '\n')
+                        {
+                            bytes.Add((byte)ssl.ReadByte());
+                        }
+                        bytes.RemoveRange(bytes.Count - 2, 2);
+                        var chunkSize = int.Parse(Encoding.ASCII.GetString(bytes.ToArray()), System.Globalization.NumberStyles.HexNumber);
+                        if (chunkSize == 0)
+                            break;
+                        var buffer = new byte[chunkSize];
+                        var leftToRead = buffer.Length;
+                        while (leftToRead > 0)
+                        {
+                            var bytesRead = ssl.Read(buffer, buffer.Length - leftToRead, leftToRead);
+                            leftToRead -= bytesRead;
+                        }
+                        chunks.AddRange(buffer);
+                        byte b = (byte)ssl.ReadByte(); // \r
+                        Debug.Assert(b == '\r');
+                        b = (byte)ssl.ReadByte(); // \n
+                        Debug.Assert(b == '\n');
+                    }
+                    using (var ms = new MemoryStream(chunks.ToArray(), writable: false))
+                    using (var gzip = new GZipStream(ms, CompressionMode.Decompress))
+                    using (var reader = new StreamReader(gzip))
+                    {
+                        return reader.ReadToEnd();
+                    }
                 }
             }
         }
