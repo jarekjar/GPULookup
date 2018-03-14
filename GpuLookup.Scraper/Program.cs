@@ -16,6 +16,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Extensions;
 using AngleSharp.Parser.Html;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 
 namespace GpuLookup.Scraper
 {
@@ -26,30 +29,36 @@ namespace GpuLookup.Scraper
         {
             Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
             Console.ReadLine();
+            TruncateTable();
             NeweggScrape();
             AmazonScrape();
             MicrocenterScrape();
             BestBuyScrape();
+            FilterDuplicates();
             Console.WriteLine("Completed.");
             Console.ReadLine();
-            //wow.
         }
-        static void NeweggScrape()
+        static async Task NeweggScrape()
         {
             var parser = new HtmlParser();
             var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
-            WebClient webClient = new WebClient();
+            ChromeOptions option = new ChromeOptions();
+            IWebDriver chromeDriver = new ChromeDriver(option);
+            string result = null;
             var page = 1;
             while (page < 60)
             {
-                string result = null;
                 if (page == 1)
                 {
-                    result = webClient.DownloadString(page1);
+                    chromeDriver.Url = page1;
+                    Console.WriteLine("Complete the captcha, then press enter to continue.");
+                    Console.ReadLine();
+                    result = chromeDriver.PageSource;
                 }
                 else
                 {
-                    result = webClient.DownloadString(page1 + "Page-" + page);
+                    chromeDriver.Url = page1 + "Page-" + page;
+                    result = chromeDriver.PageSource;
                 }
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-info");
@@ -70,17 +79,20 @@ namespace GpuLookup.Scraper
                 }
                 page++;
             }
+            chromeDriver.Close();
         }
-        static void AmazonScrape()
+        static async Task AmazonScrape()
         {
             var parser = new HtmlParser();
             var page1 = "https://www.amazon.com/Graphics-Cards-Computer-Add-Ons-Computers/b/ref=dp_bc_4?ie=UTF8&node=284822";
-            WebClient webClient = new WebClient();
+            ChromeOptions option = new ChromeOptions();
+            IWebDriver chromeDriver = new ChromeDriver(option);
             var page = 1;
             while (page < 40)
             {
                 string result = null;
-                result = webClient.DownloadString(page1 + "&page=" + page);
+                chromeDriver.Url = page1 + "&page=" + page;
+                result = chromeDriver.PageSource;
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".s-item-container");
                 if (items.Length == 0)
@@ -103,8 +115,9 @@ namespace GpuLookup.Scraper
                 }
                 page++;
             }
+            chromeDriver.Close();
         }
-        static void MicrocenterScrape()
+        static async Task MicrocenterScrape()
         {
             var parser = new HtmlParser();
             var page1 = "http://www.microcenter.com/search/search_results.aspx?N=4294966937&NTK=all&cat=Video-Cards-:-Video-Cards,-TV-Tuners-:-Computer-Parts-:-MicroCenter";
@@ -113,7 +126,7 @@ namespace GpuLookup.Scraper
             while (page < 8)
             {
                 string result = null;
-                result = webClient.DownloadString(page1 + "&page=" + page);
+                result = await webClient.DownloadStringTaskAsync(page1 + "&page=" + page);
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".product_wrapper");
                 if (items.Length == 0)
@@ -136,14 +149,14 @@ namespace GpuLookup.Scraper
                 page++;
             }
         }
-        static void BestBuyScrape()
+        static async Task BestBuyScrape()
         {
             var parser = new HtmlParser();
             WebClient webClient = new WebClient();
             var page = 1;
             while (page < 5)
             {
-                var result = ComplicatedBestBuyScrape(page);
+                var result = await Task.Run(() => ComplicatedBestBuyScrape(page));
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".list-item");
                 if (items.Length == 0)
@@ -259,7 +272,31 @@ Accept-Language: en-US,en;q=0.9
                 }
             }
         }
-        class GPU
+        static void FilterDuplicates()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("GPUS_deleteDuplicates", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                conn.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+        static void TruncateTable()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("TRUNCATE TABLE GPUS", conn)
+            {
+                CommandType = CommandType.Text
+            })
+            {
+                conn.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+        public class GPU
         {
             public double Price { get; set; }
             public string Card { get; set; }
