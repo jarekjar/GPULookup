@@ -32,7 +32,6 @@ namespace GpuLookup.Scraper
             BestBuyScrape();
             Console.WriteLine("Completed.");
             Console.ReadLine();
-            //wow.
         }
         static async Task NeweggScrape()
         {
@@ -71,7 +70,7 @@ namespace GpuLookup.Scraper
                 page++;
             }
         }
-        static void AmazonScrape()
+        static async Task AmazonScrape()
         {
             var parser = new HtmlParser();
             var page1 = "https://www.amazon.com/Graphics-Cards-Computer-Add-Ons-Computers/b/ref=dp_bc_4?ie=UTF8&node=284822";
@@ -80,7 +79,7 @@ namespace GpuLookup.Scraper
             while (page < 40)
             {
                 string result = null;
-                result = webClient.DownloadString(page1 + "&page=" + page);
+                result = await webClient.DownloadStringTaskAsync(page1 + "&page=" + page);
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".s-item-container");
                 if (items.Length == 0)
@@ -104,7 +103,7 @@ namespace GpuLookup.Scraper
                 page++;
             }
         }
-        static void MicrocenterScrape()
+        static async Task MicrocenterScrape()
         {
             var parser = new HtmlParser();
             var page1 = "http://www.microcenter.com/search/search_results.aspx?N=4294966937&NTK=all&cat=Video-Cards-:-Video-Cards,-TV-Tuners-:-Computer-Parts-:-MicroCenter";
@@ -113,7 +112,7 @@ namespace GpuLookup.Scraper
             while (page < 8)
             {
                 string result = null;
-                result = webClient.DownloadString(page1 + "&page=" + page);
+                result = await webClient.DownloadStringTaskAsync(page1 + "&page=" + page);
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".product_wrapper");
                 if (items.Length == 0)
@@ -136,14 +135,14 @@ namespace GpuLookup.Scraper
                 page++;
             }
         }
-        static void BestBuyScrape()
+        static async Task BestBuyScrape()
         {
             var parser = new HtmlParser();
             WebClient webClient = new WebClient();
             var page = 1;
             while (page < 5)
             {
-                var result = ComplicatedBestBuyScrape(page);
+                var result = await Task.Run(() => ComplicatedBestBuyScrape(page));
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".list-item");
                 if (items.Length == 0)
