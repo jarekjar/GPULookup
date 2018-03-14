@@ -34,7 +34,7 @@ namespace GpuLookup.Scraper
             Console.ReadLine();
             //wow.
         }
-        static void NeweggScrape()
+        static async Task NeweggScrape()
         {
             var parser = new HtmlParser();
             var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
@@ -45,11 +45,11 @@ namespace GpuLookup.Scraper
                 string result = null;
                 if (page == 1)
                 {
-                    result = webClient.DownloadString(page1);
+                    result = await webClient.DownloadStringTaskAsync(page1);
                 }
                 else
                 {
-                    result = webClient.DownloadString(page1 + "Page-" + page);
+                    result = await webClient.DownloadStringTaskAsync(page1 + "Page-" + page);
                 }
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-info");
