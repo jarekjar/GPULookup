@@ -9,3 +9,7 @@ body {
 .header {
   padding-left: 20px;
 }
+
+.gpuTable {
+  margin: 25px!important;
+}

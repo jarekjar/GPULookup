@@ -296,7 +296,7 @@ Accept-Language: en-US,en;q=0.9
                 command.ExecuteNonQuery();
             }
         }
-        class GPU
+        public class GPU
         {
             public double Price { get; set; }
             public string Card { get; set; }
