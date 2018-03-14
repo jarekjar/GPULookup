@@ -27,9 +27,9 @@ namespace GpuLookup.Scraper
             Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
             Console.ReadLine();
             NeweggScrape();
-            AmazonScrape();
-            MicrocenterScrape();
-            BestBuyScrape();
+            //AmazonScrape();
+            //MicrocenterScrape();
+            //BestBuyScrape();
             Console.WriteLine("Completed.");
             Console.ReadLine();
         }
@@ -38,6 +38,7 @@ namespace GpuLookup.Scraper
             var parser = new HtmlParser();
             var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
             WebClient webClient = new WebClient();
+            webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36");
             var page = 1;
             while (page < 60)
             {
