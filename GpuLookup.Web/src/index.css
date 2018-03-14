@@ -10,6 +10,10 @@ body {
   padding-left: 20px;
 }
 
+.header a {
+  color: inherit;
+}
+
 .gpuTable {
   margin: 25px!important;
 }

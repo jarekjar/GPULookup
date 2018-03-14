@@ -23,6 +23,16 @@ class GpuTable extends Component {
     return (
       <div className="row">
         <div className="col gpuTable">
+        <div className='row'>
+        <span>Sort By: </span>
+        <select className="col-sm-2" style={{'display': 'block'}} selected="Price Ascending">
+            <option value="priceDown">Price Descending</option>
+            <option value="priceUp">Price Ascending</option>
+            <option value="source">Source</option>
+            <option value="card">Card</option>
+        </select>
+        
+        </div>
           <Card>
             <Table className="responsive table table-hover">
               <thead>
