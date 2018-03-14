@@ -3,11 +3,15 @@ import {Card, Table} from 'react-materialize';
 import * as axios from 'axios';
 
 class GpuTable extends Component {
+  state = {
+    gpus: []
+  }
 
   componentDidMount = () => {
     axios.get("http://localhost:53472/api/getAll").then(
       resp => {
         console.log(resp.data);
+        this.setState({ gpus: resp.data });
       },
       err => {
         console.log(err);
@@ -20,35 +24,27 @@ class GpuTable extends Component {
       <div className="row">
         <div className="col gpuTable">
           <Card>
-            <Table className="responsive">
+            <Table className="responsive table table-hover">
               <thead>
                 <tr>
-                    <th>Manufacturer</th>
+                    <th>#</th>
                     <th>Card</th>
                     <th>Price</th>
                     <th>Source</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Alvin</td>
-                  <td>Eclair</td>
-                  <td>$0.87</td>
-                  <td>Newegg</td>
-                </tr>
-                <tr>
-                  <td>Alan</td>
-                  <td>Jellybean</td>
-                  <td>$3.76</td>
-                  <td>Newegg</td>
-                </tr>
-                <tr>
-                  <td>Jonathan</td>
-                  <td>Lollipop</td>
-                  <td>$7.00</td>
-                  <td>Newegg</td>
-                </tr>
-              </tbody>
+              {
+                this.state.gpus.map((item, index) => (
+                <tbody key={index}>
+                  <tr>
+                    <td>{index + 1}</td>
+                    <td>{item.Card}</td>
+                    <td>${item.Price}</td>
+                    <td>{item.Source}</td>
+                  </tr>
+                </tbody>
+                ))
+              }
             </Table>
           </Card>
         </div>
