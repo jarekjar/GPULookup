@@ -17,6 +17,7 @@ namespace GpuLookup.Controllers
         {
             this.gpuService = gpuService;
         }
+
         [Route("api/getAll"), HttpGet]
         public HttpResponseMessage GetAll()
         {
@@ -29,6 +30,12 @@ namespace GpuLookup.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
-        } 
+        }
+        
+        [Route("api/search/{query}"), HttpGet]
+        public HttpResponseMessage Search(string query)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, query);
+        }
     }
 }
