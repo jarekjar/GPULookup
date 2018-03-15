@@ -4,20 +4,23 @@ import * as axios from 'axios';
 
 class GpuTable extends Component {
   state = {
-    gpus: []
+    gpus: [],
+    searchValue: ''
   }
 
   componentDidMount = () => {
     axios.get("http://localhost:53472/api/getAll").then(
       resp => {
         console.log(resp.data);
-        this.setState({ gpus: resp.data.sort((a,b) => b.Price - a.Price) });
+        this.setState({ gpus: resp.data.sort((a,b) => a.Price - b.Price) });
       },
       err => {
         console.log(err);
       }
     )
   }
+
+  searchBar = '';
 
   sortItems = (e) => {
     const option = e.target.value;
@@ -37,6 +40,22 @@ class GpuTable extends Component {
     this.setState({gpus : sortedGpus});
   }
 
+  search = () => {
+    const query = encodeURIComponent(this.searchBar.state.value);
+    axios.get(`http://localhost:53472/api/search/${query}`).then(
+      resp => {
+        console.log(resp.data);
+        if(resp.data)
+          this.setState({ gpus: resp.data.sort((a,b) => a.Price - b.Price) });
+        else
+          this.setState({gpus: []})
+        this.searchBar.setState({ value : ''})
+      },
+      err => {
+        console.log(err);
+      }
+    )
+  }
 
   render() {
     return (
@@ -46,8 +65,8 @@ class GpuTable extends Component {
           <div className="selectBox col-sm-2">
             <span style={{'paddingTop': '10px'}}>Sort By: </span>
             <select style={{'display': 'block'}} onChange={this.sortItems}>
-                <option value="priceDown">Highest Price</option>
                 <option value="priceUp">Lowest Price</option>
+                <option value="priceDown">Highest Price</option>
                 <option value="Source">Source</option>
                 <option value="Card">Card</option>
             </select>
@@ -67,10 +86,11 @@ class GpuTable extends Component {
                   'AMD': null
                 }
               }
+              ref={(e) => this.searchBar = e}
               />
           </div>
           <div className="search">
-            <Button waves='light' className='light-blue darken-3'>Search</Button>
+            <Button waves='light' className='light-blue darken-3' onClick={this.search}>Search</Button>
           </div>
         </div>
           <Card>

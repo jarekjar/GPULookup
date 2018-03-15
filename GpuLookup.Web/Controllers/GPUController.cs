@@ -35,7 +35,15 @@ namespace GpuLookup.Controllers
         [Route("api/search/{query}"), HttpGet]
         public HttpResponseMessage Search(string query)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, query);
+            try
+            {
+                var gpus = gpuService.GetResults(query);
+                return Request.CreateResponse(HttpStatusCode.OK, gpus);
+            }
+            catch(Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
     }
 }

@@ -5,9 +5,9 @@ class MyNavbar extends Component {
   render() {
     return (
       <Navbar brand="GPU Lookup" right className="light-blue darken-3 header">
-        <NavItem href='get-started.html'>Getting started</NavItem>
-        <NavItem href='components.html'>Components</NavItem>
-        <NavItem href='components.html'>Stuff</NavItem>
+        <NavItem href='get-started.html'></NavItem>
+        <NavItem href='components.html'></NavItem>
+        <NavItem href='components.html'></NavItem>
       </Navbar>
     );
   }
