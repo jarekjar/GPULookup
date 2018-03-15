@@ -31,7 +31,7 @@ namespace GpuLookup.Scraper
             Console.ReadLine();
             TruncateTable();
             Task.WaitAll(
-                NeweggScrape(),
+                //NeweggScrape(),
                 AmazonScrape(),
                 MicrocenterScrape(),
                 BestBuyScrape()
@@ -100,6 +100,7 @@ namespace GpuLookup.Scraper
             options.AddArgument("--disable-extensions");
             options.PageLoadStrategy = (PageLoadStrategy)3;
             var page = 1;
+            chromeDriver.Url = page1 + "&page=" + page;
             bool pageLoading = true;
             while (page < 40)
             {
@@ -114,6 +115,7 @@ namespace GpuLookup.Scraper
                     pageLoading = true;
                     continue;
                 }
+                pageLoading = false;
                 GPU gpu = null;
                 foreach (var item in items)
                 {
@@ -318,3 +320,5 @@ Accept-Language: en-US,en;q=0.9
         }
     }
 }
+
+url.replace(" ", "+")'
