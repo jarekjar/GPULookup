@@ -30,10 +30,13 @@ namespace GpuLookup.Scraper
             Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
             Console.ReadLine();
             TruncateTable();
-            NeweggScrape();
-            AmazonScrape();
-            MicrocenterScrape();
-            BestBuyScrape();
+            Task.WaitAll(
+                NeweggScrape(),
+                AmazonScrape(),
+                MicrocenterScrape(),
+                BestBuyScrape()
+            );
+            Console.WriteLine("Filter the SQL Table");
             FilterDuplicates();
             Console.WriteLine("Completed.");
             Console.ReadLine();
@@ -41,32 +44,35 @@ namespace GpuLookup.Scraper
         static async Task NeweggScrape()
         {
             var parser = new HtmlParser();
-            var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/";
-            ChromeOptions option = new ChromeOptions();
-            IWebDriver chromeDriver = new ChromeDriver(option);
+            var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/?recaptcha=pass";
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--disable-javascript");
+            options.AddArgument("--disable-images");
+            options.AddArgument("incognito"); 
+            options.AddArgument("--disable-bundled-ppapi-flash"); 
+            options.AddArgument("--disable-extensions");
+            options.PageLoadStrategy = (PageLoadStrategy)3;
+            IWebDriver chromeDriver = new ChromeDriver(options);
             string result = null;
+            bool pageLoading = true;
             var page = 1;
+            chromeDriver.Url = page1;
+            Console.WriteLine("Complete the captcha, then press enter to continue.");
+            Console.ReadLine();
             while (page < 60)
             {
-                if (page == 1)
-                {
-                    chromeDriver.Url = page1;
-                    Console.WriteLine("Complete the captcha, then press enter to continue.");
-                    Console.ReadLine();
-                    result = chromeDriver.PageSource;
-                }
-                else
-                {
+                if (!pageLoading)
                     chromeDriver.Url = page1 + "Page-" + page;
-                    result = chromeDriver.PageSource;
-                }
+                //chromeDriver.
+                result = chromeDriver.PageSource;
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-info");
                 if (items.Length == 0)
                 {
-                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
-                    Console.ReadLine();
+                    pageLoading = true;
+                    continue;
                 }
+                pageLoading = false;
                 GPU gpu = null;
                 foreach (var item in items)
                 {
@@ -85,20 +91,28 @@ namespace GpuLookup.Scraper
         {
             var parser = new HtmlParser();
             var page1 = "https://www.amazon.com/Graphics-Cards-Computer-Add-Ons-Computers/b/ref=dp_bc_4?ie=UTF8&node=284822";
-            ChromeOptions option = new ChromeOptions();
-            IWebDriver chromeDriver = new ChromeDriver(option);
+            ChromeOptions options = new ChromeOptions();
+            IWebDriver chromeDriver = new ChromeDriver(options);
+            options.AddArgument("--disable-javascript");
+            options.AddArgument("--disable-images");
+            options.AddArgument("incognito");
+            options.AddArgument("--disable-bundled-ppapi-flash");
+            options.AddArgument("--disable-extensions");
+            options.PageLoadStrategy = (PageLoadStrategy)3;
             var page = 1;
+            bool pageLoading = true;
             while (page < 40)
             {
                 string result = null;
-                chromeDriver.Url = page1 + "&page=" + page;
+                if(!pageLoading)
+                    chromeDriver.Url = page1 + "&page=" + page;
                 result = chromeDriver.PageSource;
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".s-item-container");
                 if (items.Length == 0)
                 {
-                    Console.WriteLine("reCaptcha has detected that you are, in fact, actually a robot.");
-                    Console.ReadLine();
+                    pageLoading = true;
+                    continue;
                 }
                 GPU gpu = null;
                 foreach (var item in items)
