@@ -30,7 +30,6 @@ body {
   top: 0;
   left: 0;
   z-index: 10;
-  color: 
 }
 
 .input-field input[type=text]:focus + label {
@@ -48,6 +47,6 @@ body {
 
 .search {
   position: absolute;
-  right: 60%;
+  right: 57%;
   top: 1.5em;
 }
