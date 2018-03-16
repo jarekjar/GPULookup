@@ -18,7 +18,7 @@ namespace GpuLookup.Services
             SqlDataReader rdr = null;
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conString"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("select chip, price, source from GPUS", conn);
+                SqlCommand cmd = new SqlCommand("select chip, price, source, url, image_url from GPUS", conn);
                 conn.Open();
                 rdr = cmd.ExecuteReader();
                 while (rdr.Read())
@@ -29,6 +29,8 @@ namespace GpuLookup.Services
                     gpu.Card = rdr.GetString(0);
                     gpu.Price = rdr.GetDecimal(1);
                     gpu.Source = rdr.GetString(2);
+                    gpu.Url = rdr.GetString(3);
+                    gpu.ImageUrl = rdr.GetString(4);
                     gpus.Add(gpu);
                 }
             }
@@ -42,7 +44,7 @@ namespace GpuLookup.Services
             SqlDataReader rdr = null;
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conString"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT chip, price, source FROM GPUS WHERE GPUS.chip LIKE '%' + @string + '%'; ", conn);
+                SqlCommand cmd = new SqlCommand("select chip, price, source, url, image_url FROM GPUS WHERE GPUS.chip LIKE '%' + @string + '%'; ", conn);
                 cmd.Parameters.Add("@string", SqlDbType.NVarChar).Value = query;
                 conn.Open();
                 rdr = cmd.ExecuteReader();
@@ -54,6 +56,8 @@ namespace GpuLookup.Services
                     gpu.Card = rdr.GetString(0);
                     gpu.Price = rdr.GetDecimal(1);
                     gpu.Source = rdr.GetString(2);
+                    gpu.Url = rdr.GetString(3);
+                    gpu.ImageUrl = rdr.GetString(4);
                     gpus.Add(gpu);
                 }
             }
