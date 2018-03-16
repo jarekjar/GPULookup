@@ -25,13 +25,24 @@ namespace GpuLookup.Scraper
     class Program
     {
         static string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
+        static string[] proxyList = new string[] {
+            "207.246.99.38:8080",
+            "144.202.55.61:8080",
+            "207.246.106.194:8080",
+            "35.199.63.39:8080",
+            "207.246.110.64:8080",
+            "207.246.99.75:8080",
+            "144.202.112.88:8080",
+            "138.68.236.249:3128",
+            "191.101.156.89:80"
+        };
         static void Main(string[] args)
         {
             Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
             Console.ReadLine();
-            //TruncateTable();
+            TruncateTable();
             Task.WaitAll(
-                //NeweggScrape()
+                NeweggScrape(),
                 AmazonScrape(),
                 MicrocenterScrape(),
                 BestBuyScrape()
@@ -51,14 +62,13 @@ namespace GpuLookup.Scraper
             options.AddArgument("incognito"); 
             options.AddArgument("--disable-bundled-ppapi-flash"); 
             options.AddArgument("--disable-extensions");
-            //options.PageLoadStrategy = (PageLoadStrategy)2;
+            options.AddArgument("--headless");
+            var rnd = new Random();
+            options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1,proxyList.Length - 1)]); 
             IWebDriver chromeDriver = new ChromeDriver(options);
             string result = null;
-            //bool pageLoading = true;
             var page = 1;
             chromeDriver.Url = page1;
-            Console.WriteLine("Complete the captcha, then press enter to continue.");
-            Console.ReadLine();
             while (page < 30)
             {
                 if (page != 1)
@@ -89,13 +99,15 @@ namespace GpuLookup.Scraper
             var parser = new HtmlParser();
             var page1 = "https://www.amazon.com/Graphics-Cards-Computer-Add-Ons-Computers/b/ref=dp_bc_4?ie=UTF8&node=284822";
             ChromeOptions options = new ChromeOptions();
-            IWebDriver chromeDriver = new ChromeDriver(options);
             options.AddArgument("--disable-javascript");
             options.AddArgument("--disable-images");
             options.AddArgument("incognito");
             options.AddArgument("--disable-bundled-ppapi-flash");
             options.AddArgument("--disable-extensions");
-            options.PageLoadStrategy = (PageLoadStrategy)3;
+            options.AddArgument("--headless");
+            var rnd = new Random();
+            options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1, proxyList.Length - 1)]);
+            IWebDriver chromeDriver = new ChromeDriver(options);
             var page = 1;
             chromeDriver.Url = page1 + "&page=" + page;
             bool pageLoading = true;
