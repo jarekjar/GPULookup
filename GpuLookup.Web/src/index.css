@@ -2,7 +2,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background: url("bg-1.jpeg");
   background-size: cover;
   position: relative;
 }

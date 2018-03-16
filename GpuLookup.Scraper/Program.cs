@@ -25,15 +25,26 @@ namespace GpuLookup.Scraper
     class Program
     {
         static string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
+        static string[] proxyList = new string[] {
+            "207.246.99.38:8080",
+            "144.202.55.61:8080",
+            "207.246.106.194:8080",
+            "35.199.63.39:8080",
+            "207.246.110.64:8080",
+            "207.246.99.75:8080",
+            "144.202.112.88:8080",
+            "138.68.236.249:3128",
+            "191.101.156.89:80"
+        };
         static void Main(string[] args)
         {
             Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
             Console.ReadLine();
-            //TruncateTable();
+            TruncateTable();
             Task.WaitAll(
-                //NeweggScrape()
-                AmazonScrape(),
-                MicrocenterScrape(),
+                //NeweggScrape(),
+                //AmazonScrape(),
+                //MicrocenterScrape(),
                 BestBuyScrape()
             );
             Console.WriteLine("Filter the SQL Table");
@@ -51,21 +62,21 @@ namespace GpuLookup.Scraper
             options.AddArgument("incognito"); 
             options.AddArgument("--disable-bundled-ppapi-flash"); 
             options.AddArgument("--disable-extensions");
-            //options.PageLoadStrategy = (PageLoadStrategy)2;
+            options.AddArgument("--headless");
+            var rnd = new Random();
+            options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1,proxyList.Length - 1)]); 
             IWebDriver chromeDriver = new ChromeDriver(options);
             string result = null;
-            //bool pageLoading = true;
             var page = 1;
             chromeDriver.Url = page1;
-            Console.WriteLine("Complete the captcha, then press enter to continue.");
-            Console.ReadLine();
             while (page < 30)
             {
                 if (page != 1)
                     chromeDriver.Url = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/" + "Page-" + page + "?&PageSize=96";
                 result = chromeDriver.PageSource;
                 var document = parser.Parse(result);
-                var items = document.QuerySelectorAll(".item-info");
+                var items = document.QuerySelectorAll(".item-container");
+                //item-info
                 if (items.Length < 90)
                 {
                     continue;
@@ -78,6 +89,8 @@ namespace GpuLookup.Scraper
                     if (item.QuerySelector(".price-current > strong") != null)
                         gpu.Price = Double.Parse(item.QuerySelector(".price-current > strong").TextContent) + Double.Parse(item.QuerySelector(".price-current > sup").TextContent);
                     gpu.Source = "Newegg";
+                    gpu.Url = item.QuerySelector(".item-img").Attributes["href"].Value;
+                    gpu.ImageUrl = "http:" + item.QuerySelector(".item-img").FirstElementChild.Attributes["src"].Value;
                     SQLInsert(gpu);
                 }
                 page++;
@@ -89,13 +102,8 @@ namespace GpuLookup.Scraper
             var parser = new HtmlParser();
             var page1 = "https://www.amazon.com/Graphics-Cards-Computer-Add-Ons-Computers/b/ref=dp_bc_4?ie=UTF8&node=284822";
             ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--headless");
             IWebDriver chromeDriver = new ChromeDriver(options);
-            options.AddArgument("--disable-javascript");
-            options.AddArgument("--disable-images");
-            options.AddArgument("incognito");
-            options.AddArgument("--disable-bundled-ppapi-flash");
-            options.AddArgument("--disable-extensions");
-            options.PageLoadStrategy = (PageLoadStrategy)3;
             var page = 1;
             chromeDriver.Url = page1 + "&page=" + page;
             bool pageLoading = true;
@@ -124,6 +132,8 @@ namespace GpuLookup.Scraper
                     if (item.QuerySelector(".sx-price-whole") != null)
                         gpu.Price = Double.Parse(item.QuerySelector(".sx-price-whole").TextContent) + Double.Parse(item.QuerySelector(".sx-price-fractional").TextContent);
                     gpu.Source = "Amazon";
+                    gpu.ImageUrl = item.QuerySelector(".s-access-image").GetAttribute("src");
+                    gpu.Url = item.QuerySelector(".a-link-normal").GetAttribute("href");
                     SQLInsert(gpu);
                 }
                 page++;
@@ -156,6 +166,8 @@ namespace GpuLookup.Scraper
                         continue;
                     gpu.Price = Double.Parse(item.QuerySelector(".normal > h2 > a").GetAttribute("data-price"));
                     gpu.Source = "Microcenter";
+                    gpu.ImageUrl = item.QuerySelector(".SearchResultProductImage").GetAttribute("src");
+                    gpu.Url = "http://www.microcenter.com" + item.QuerySelector(".normal > h2 > a").GetAttribute("href");
                     SQLInsert(gpu);
                 }
                 page++;
@@ -186,6 +198,8 @@ namespace GpuLookup.Scraper
                         continue;
                     gpu.Price = Double.Parse(item.GetAttribute("data-price"));
                     gpu.Source = "Best Buy";
+                    gpu.Url = "https://www.bestbuy.com" + item.GetAttribute("data-url");
+                    gpu.ImageUrl = "https://pisces.bbystatic.com/image2/" + item.GetAttribute("data-img-path");
                     SQLInsert(gpu);
                 }
                 page++;
@@ -270,11 +284,13 @@ Accept-Language: en-US,en;q=0.9
                 {
                     connection.Open();
                     Console.WriteLine("Inserting " + gpu.Card + " into the database.");
-                    string sql = "INSERT INTO GPUS(chip, price, source) VALUES(@chip, @price, @source)";
+                    string sql = "INSERT INTO GPUS(chip, price, source, url, image_url) VALUES(@chip, @price, @source, @url, @image_url)";
                     SqlCommand cmd = new SqlCommand(sql, connection);
                     cmd.Parameters.Add("@chip", SqlDbType.NVarChar).Value = gpu.Card;
                     cmd.Parameters.Add("@price", SqlDbType.Money).Value = gpu.Price;
                     cmd.Parameters.Add("@source", SqlDbType.NVarChar).Value = gpu.Source;
+                    cmd.Parameters.Add("@url", SqlDbType.NVarChar).Value = gpu.Url;
+                    cmd.Parameters.Add("@image_url", SqlDbType.NVarChar).Value = gpu.ImageUrl;
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                 }
@@ -313,6 +329,8 @@ Accept-Language: en-US,en;q=0.9
             public double Price { get; set; }
             public string Card { get; set; }
             public string Source { get; set; }
+            public string Url { get; set; }
+            public string ImageUrl { get; set; }
         }
     }
 }
