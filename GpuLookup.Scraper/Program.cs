@@ -43,8 +43,8 @@ namespace GpuLookup.Scraper
             TruncateTable();
             Task.WaitAll(
                 //NeweggScrape(),
-                AmazonScrape(),
-                MicrocenterScrape(),
+                //AmazonScrape(),
+                //MicrocenterScrape(),
                 BestBuyScrape()
             );
             Console.WriteLine("Filter the SQL Table");
@@ -199,7 +199,7 @@ namespace GpuLookup.Scraper
                     gpu.Price = Double.Parse(item.GetAttribute("data-price"));
                     gpu.Source = "Best Buy";
                     gpu.Url = "https://www.bestbuy.com" + item.GetAttribute("data-url");
-                    gpu.ImageUrl = "https://www.bestbuy.com" + item.GetAttribute("data-img-path");
+                    gpu.ImageUrl = "https://pisces.bbystatic.com/image2/" + item.GetAttribute("data-img-path");
                     SQLInsert(gpu);
                 }
                 page++;
