@@ -10,5 +10,7 @@ namespace GpuLookup.Models
         public decimal Price { get; set; }
         public string Card { get; set; }
         public string Source { get; set; }
+        public string Url { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

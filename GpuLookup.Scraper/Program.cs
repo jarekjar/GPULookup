@@ -24,7 +24,17 @@ namespace GpuLookup.Scraper
 {
     class Program
     {
+        public class GPU
+        {
+            public double Price { get; set; }
+            public string Card { get; set; }
+            public string Source { get; set; }
+            public string Url { get; set; }
+            public string ImageUrl { get; set; }
+        }
+
         static string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
+
         static string[] proxyList = new string[] {
             "207.246.99.38:8080",
             "144.202.55.61:8080",
@@ -36,22 +46,24 @@ namespace GpuLookup.Scraper
             "138.68.236.249:3128",
             "191.101.156.89:80"
         };
+
         static void Main(string[] args)
         {
             Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
             Console.ReadLine();
             TruncateTable();
             Task.WaitAll(
-                //NeweggScrape(),
-                //AmazonScrape(),
-                //MicrocenterScrape(),
+                NeweggScrape(),
+                AmazonScrape(),
+                MicrocenterScrape(),
                 BestBuyScrape()
             );
-            Console.WriteLine("Filter the SQL Table");
+            Console.WriteLine("Filtering the SQL Table.....");
             FilterDuplicates();
             Console.WriteLine("Completed.");
             Console.ReadLine();
         }
+
         static async Task NeweggScrape()
         {
             var parser = new HtmlParser();
@@ -97,6 +109,7 @@ namespace GpuLookup.Scraper
             }
             chromeDriver.Close();
         }
+
         static async Task AmazonScrape()
         {
             var parser = new HtmlParser();
@@ -140,6 +153,7 @@ namespace GpuLookup.Scraper
             }
             chromeDriver.Close();
         }
+
         static async Task MicrocenterScrape()
         {
             var parser = new HtmlParser();
@@ -173,6 +187,7 @@ namespace GpuLookup.Scraper
                 page++;
             }
         }
+
         static async Task BestBuyScrape()
         {
             var parser = new HtmlParser();
@@ -199,12 +214,14 @@ namespace GpuLookup.Scraper
                     gpu.Price = Double.Parse(item.GetAttribute("data-price"));
                     gpu.Source = "Best Buy";
                     gpu.Url = "https://www.bestbuy.com" + item.GetAttribute("data-url");
-                    gpu.ImageUrl = "https://pisces.bbystatic.com/image2/" + item.GetAttribute("data-img-path");
+                        if(gpu.ImageUrl != null)
+                            gpu.ImageUrl = "https://pisces.bbystatic.com/image2/" + item.GetAttribute("data-img-path");
                     SQLInsert(gpu);
                 }
                 page++;
             }
         }
+
         static string ComplicatedBestBuyScrape(int i)
         {
             using (var tcpClient = new TcpClient())
@@ -276,6 +293,7 @@ Accept-Language: en-US,en;q=0.9
                 }
             }
         }
+
         static void SQLInsert(GPU gpu)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -300,6 +318,7 @@ Accept-Language: en-US,en;q=0.9
                 }
             }
         }
+
         static void FilterDuplicates()
         {
             using (var conn = new SqlConnection(connectionString))
@@ -312,6 +331,7 @@ Accept-Language: en-US,en;q=0.9
                 command.ExecuteNonQuery();
             }
         }
+
         static void TruncateTable()
         {
             using (var conn = new SqlConnection(connectionString))
@@ -324,13 +344,6 @@ Accept-Language: en-US,en;q=0.9
                 command.ExecuteNonQuery();
             }
         }
-        public class GPU
-        {
-            public double Price { get; set; }
-            public string Card { get; set; }
-            public string Source { get; set; }
-            public string Url { get; set; }
-            public string ImageUrl { get; set; }
-        }
+
     }
 }

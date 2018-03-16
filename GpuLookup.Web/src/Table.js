@@ -97,7 +97,7 @@ class GpuTable extends Component {
             <Table className="responsive table table-hover">
               <thead>
                 <tr>
-                    <th>#</th>
+                    <th>Image</th>
                     <th>Card</th>
                     <th>Price</th>
                     <th>Source</th>
@@ -107,8 +107,16 @@ class GpuTable extends Component {
                 this.state.gpus.map((item, index) => (
                 <tbody key={index}>
                   <tr>
-                    <td>{index + 1}</td>
-                    <td>{item.Card}</td>
+                    <td><img 
+                      src={item.ImageUrl}
+                      alt={"No Image"}
+                      className="gpu-image"
+                      />
+                    </td>
+                    <td>
+                      <a href={item.Url}> {item.Card} 
+                      </a>
+                    </td>
                     <td>${item.Price}</td>
                     <td>{item.Source}</td>
                   </tr>

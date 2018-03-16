@@ -49,3 +49,8 @@ body {
   right: 57%;
   top: 1.5em;
 }
+
+.gpu-image {
+  height: 100px;
+  width: 100px;
+}
