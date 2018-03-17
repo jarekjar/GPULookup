@@ -65,6 +65,7 @@ namespace GpuLookup.Controllers
             public int PageNum { get; set; }
             public bool Ascending { get; set; }
             public string SortBy { get; set; }
+            public string Query { get; set; }
         }
     }
 }

@@ -76,6 +76,7 @@ namespace GpuLookup.Services
                 cmd.Parameters.Add("@pageNumber", SqlDbType.Int).Value = Data.PageNum;
                 cmd.Parameters.Add("@sort", SqlDbType.NVarChar).Value = Data.SortBy;
                 cmd.Parameters.Add("@asc", SqlDbType.Bit).Value = Data.Ascending;
+                cmd.Parameters.Add("@query", SqlDbType.NVarChar).Value = Data.Query;
                 conn.Open();
                 rdr = cmd.ExecuteReader();
                 while (rdr.Read())

@@ -6,11 +6,10 @@ class GpuTable extends Component {
   state = {
     gpus: [],
     searchValue: '',
-    sort: {
-      PageNum: 1,
-      Ascending: true,
-      SortBy: "price"
-    }
+    PageNum: 1,
+    Ascending: true,
+    SortBy: "price",
+    Query: ""
   }
 
   
@@ -20,7 +19,13 @@ class GpuTable extends Component {
   }
 
   getGpus = () => {
-    axios.post("http://localhost:53472/api/getNext", this.state.sort)
+    const sortObj = {
+      PageNum: this.state.PageNum,
+      Ascending: this.state.Ascending,
+      SortBy: this.state.SortBy,
+      Query: this.state.Query
+    }
+    axios.post("http://localhost:53472/api/getNext", sortObj)
     .then(
       resp => {
         this.setState({ gpus: resp.data });
@@ -37,65 +42,39 @@ class GpuTable extends Component {
     const option = e.target.value;
     if (option === "priceHigh"){
       this.setState({
-        sort: {
-          PageNum: 1,
-          Ascending: false,
-          SortBy: "price"
-        }
+        Ascending: false,
+        SortBy: "price",
+        PageNum: 1
       }, this.getGpus)
     } else if (option === "priceLow"){
       this.setState({
-        sort: {
-          PageNum: 1,
-          Ascending: true,
-          SortBy: "price"
-        }
+        Ascending: true,
+        SortBy: "price",
+        PageNum: 1
       }, this.getGpus)
     } else if (option === "Source"){
       this.setState({
-        sort: {
-          PageNum: 1,
-          Ascending: true,
-          SortBy: "source"
-        }
+        Ascending: true,
+        SortBy: "source",
+        PageNum: 1
       }, this.getGpus)
     } else if (option === "Card"){
       this.setState({
-        sort: {
-          PageNum: 1,
-          Ascending: true,
-          SortBy: "chip"
-        }
+        Ascending: true,
+        SortBy: "chip",
+        PageNum: 1
       }, this.getGpus)
     }
   }
 
   search = () => {
-  //   const query = encodeURIComponent(this.searchBar.state.value);
-  //   axios.get(`http://localhost:53472/api/search/${query}`).then(
-  //     resp => {
-  //       console.log(resp.data);
-  //       if(resp.data)
-  //         this.setState({ gpus: resp.data.sort((a,b) => a.Price - b.Price) });
-  //       else
-  //         this.setState({gpus: []})
-  //       this.searchBar.setState({ value : ''})
-  //     },
-  //     err => {
-  //       console.log(err);
-  //     }
-  //   )
+     const query = encodeURIComponent(this.searchBar.state.value);
+     this.setState({ Query: query }, this.getGpus)
    }
 
    newPage = (pageNum) => {
-      let asc = this.state.sort.Ascending;
-      let sort = this.state.sort.SortBy;
       this.setState({
-        sort: {
-          PageNum: pageNum,
-          Ascending: asc,
-          SortBy: sort
-        }
+        PageNum: pageNum
       }, this.getGpus)
    }
 
@@ -138,7 +117,7 @@ class GpuTable extends Component {
           <Card>
             {
               this.state.gpus[1] && 
-              <Pagination items={Math.floor(this.state.gpus[0].RowCount / 10)} activePage={1} maxButtons={8} onSelect={(pagination) => this.newPage(pagination)}/>
+              <Pagination items={Math.floor(this.state.gpus[0].RowCount / 10) || 1} activePage={this.state.PageNum || 1} maxButtons={8} onSelect={(pagination) => this.newPage(pagination)}/>
             }
             <Table className="responsive table table-hover">
               <thead>
