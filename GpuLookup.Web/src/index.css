@@ -24,7 +24,6 @@ body {
 
 .searchBox {
   width: 100%;
-  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -53,4 +52,8 @@ body {
 .gpu-image {
   height: 100px;
   width: 100px;
+}
+
+.pagination li.active {
+  background-color: #0277BD
 }

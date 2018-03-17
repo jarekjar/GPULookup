@@ -1,18 +1,29 @@
 import React, { Component } from 'react';
-import {Card, Table, Autocomplete, Button} from 'react-materialize';
+import {Card, Table, Autocomplete, Button, Pagination} from 'react-materialize';
 import * as axios from 'axios';
 
 class GpuTable extends Component {
   state = {
     gpus: [],
-    searchValue: ''
+    searchValue: '',
+    sort: {
+      PageNum: 1,
+      Ascending: true,
+      SortBy: "price"
+    }
   }
 
+  
+
   componentDidMount = () => {
-    axios.get("http://localhost:53472/api/getAll").then(
+    this.getGpus();
+  }
+
+  getGpus = () => {
+    axios.post("http://localhost:53472/api/getNext", this.state.sort)
+    .then(
       resp => {
-        console.log(resp.data);
-        this.setState({ gpus: resp.data.sort((a,b) => a.Price - b.Price) });
+        this.setState({ gpus: resp.data });
       },
       err => {
         console.log(err);
@@ -24,38 +35,69 @@ class GpuTable extends Component {
 
   sortItems = (e) => {
     const option = e.target.value;
-    let sortedGpus;
-    if (option === "priceDown"){
-      sortedGpus = this.state.gpus.sort((a,b) => b.Price - a.Price);
-    } else if (option === "priceUp"){
-      sortedGpus = this.state.gpus.sort((a,b) => a.Price - b.Price);
-    } else {
-      sortedGpus = this.state.gpus.sort((a,b) => {
-        if(a[option] < b[option]) return -1;
-        if(a[option] > b[option]) return 1;
-        return 0;
-      });
+    if (option === "priceHigh"){
+      this.setState({
+        sort: {
+          PageNum: 1,
+          Ascending: false,
+          SortBy: "price"
+        }
+      }, this.getGpus)
+    } else if (option === "priceLow"){
+      this.setState({
+        sort: {
+          PageNum: 1,
+          Ascending: true,
+          SortBy: "price"
+        }
+      }, this.getGpus)
+    } else if (option === "Source"){
+      this.setState({
+        sort: {
+          PageNum: 1,
+          Ascending: true,
+          SortBy: "source"
+        }
+      }, this.getGpus)
+    } else if (option === "Card"){
+      this.setState({
+        sort: {
+          PageNum: 1,
+          Ascending: true,
+          SortBy: "chip"
+        }
+      }, this.getGpus)
     }
-    console.log(sortedGpus);
-    this.setState({gpus : sortedGpus});
   }
 
   search = () => {
-    const query = encodeURIComponent(this.searchBar.state.value);
-    axios.get(`http://localhost:53472/api/search/${query}`).then(
-      resp => {
-        console.log(resp.data);
-        if(resp.data)
-          this.setState({ gpus: resp.data.sort((a,b) => a.Price - b.Price) });
-        else
-          this.setState({gpus: []})
-        this.searchBar.setState({ value : ''})
-      },
-      err => {
-        console.log(err);
-      }
-    )
-  }
+  //   const query = encodeURIComponent(this.searchBar.state.value);
+  //   axios.get(`http://localhost:53472/api/search/${query}`).then(
+  //     resp => {
+  //       console.log(resp.data);
+  //       if(resp.data)
+  //         this.setState({ gpus: resp.data.sort((a,b) => a.Price - b.Price) });
+  //       else
+  //         this.setState({gpus: []})
+  //       this.searchBar.setState({ value : ''})
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     }
+  //   )
+   }
+
+   newPage = (pageNum) => {
+      let asc = this.state.sort.Ascending;
+      let sort = this.state.sort.SortBy;
+      this.setState({
+        sort: {
+          PageNum: pageNum,
+          Ascending: asc,
+          SortBy: sort
+        }
+      }, this.getGpus)
+   }
 
   render() {
     return (
@@ -65,8 +107,8 @@ class GpuTable extends Component {
           <div className="selectBox col-sm-2">
             <span style={{'paddingTop': '10px'}}>Sort By: </span>
             <select style={{'display': 'block'}} onChange={this.sortItems}>
-                <option value="priceUp">Lowest Price</option>
-                <option value="priceDown">Highest Price</option>
+                <option value="priceLow">Lowest Price</option>
+                <option value="priceHigh">Highest Price</option>
                 <option value="Source">Source</option>
                 <option value="Card">Card</option>
             </select>
@@ -94,6 +136,10 @@ class GpuTable extends Component {
           </div>
         </div>
           <Card>
+            {
+              this.state.gpus[1] && 
+              <Pagination items={Math.floor(this.state.gpus[0].RowCount / 10)} activePage={1} maxButtons={8} onSelect={(pagination) => this.newPage(pagination)}/>
+            }
             <Table className="responsive table table-hover">
               <thead>
                 <tr>
@@ -107,11 +153,14 @@ class GpuTable extends Component {
                 this.state.gpus.map((item, index) => (
                 <tbody key={index}>
                   <tr>
-                    <td><img 
-                      src={item.ImageUrl}
-                      alt={"No Image"}
-                      className="gpu-image"
-                      />
+                    <td>
+                      <a href={item.Url}>
+                        <img 
+                        src={item.ImageUrl}
+                        alt={"No Image"}
+                        className="gpu-image"
+                        />
+                      </a>
                     </td>
                     <td>
                       <a href={item.Url}> {item.Card} 

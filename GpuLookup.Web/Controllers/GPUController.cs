@@ -45,5 +45,26 @@ namespace GpuLookup.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+        [Route("api/getNext/"), HttpPost]
+        public HttpResponseMessage GetNext(Paginate data)
+        {
+            try
+            {
+                var gpus = gpuService.GetNext(data);
+                return Request.CreateResponse(HttpStatusCode.OK, gpus);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        public class Paginate
+        {
+            public int PageNum { get; set; }
+            public bool Ascending { get; set; }
+            public string SortBy { get; set; }
+        }
     }
 }

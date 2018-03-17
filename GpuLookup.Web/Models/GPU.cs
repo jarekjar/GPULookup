@@ -12,5 +12,6 @@ namespace GpuLookup.Models
         public string Source { get; set; }
         public string Url { get; set; }
         public string ImageUrl { get; set; }
+        public int RowCount { get; set; }
     }
 }
