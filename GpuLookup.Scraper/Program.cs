@@ -46,10 +46,10 @@ namespace GpuLookup.Scraper
                 GenerateProxyList()
             );
             Task.WaitAll(
-                NeweggScrape(),
-                AmazonScrape(),
-                MicrocenterScrape(),
-                BestBuyScrape()
+                NeweggScrape()
+                //AmazonScrape(),
+                //MicrocenterScrape(),
+                //BestBuyScrape()
             );
             Console.WriteLine("Filtering the SQL Table.....");
             FilterDuplicates();
@@ -65,8 +65,8 @@ namespace GpuLookup.Scraper
             string result = await webClient.DownloadStringTaskAsync(page);
             var document = parser.Parse(result);
             var items = document.QuerySelectorAll("#proxylisttable > tbody > tr");
-            
-            for(var i = 0; i < 6; i++)
+
+            for (var i = 0; i < 6; i++)
             {
                 if (proxyList == null)
                 {
@@ -79,10 +79,9 @@ namespace GpuLookup.Scraper
         static async Task NeweggScrape()
         {
             var parser = new HtmlParser();
-            var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/&PageSize=96";
+            var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/?recaptcha=pass&PageSize=96";
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--disable-javascript");
-            options.AddArgument("--disable-images");
             options.AddArgument("incognito"); 
             options.AddArgument("--disable-bundled-ppapi-flash"); 
             options.AddArgument("--disable-extensions");
@@ -93,14 +92,24 @@ namespace GpuLookup.Scraper
             string result = null;
             var page = 1;
             chromeDriver.Url = page1;
+            var timeOut = DateTime.Now + TimeSpan.FromSeconds(20);
             while (page < 30)
             {
+                ////go to new proxy on timeout
+                //if (page == 1 && DateTime.Now > timeOut )
+                //{
+                //    chromeDriver.Quit();
+                //    options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1, proxyList.Count - 1)]);
+                //    chromeDriver = new ChromeDriver(options);
+                //    timeOut = DateTime.Now + TimeSpan.FromSeconds(10);
+                //    Console.WriteLine("Timeout Reset");
+                //}
+
                 if (page != 1)
                     chromeDriver.Url = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/" + "Page-" + page + "?&PageSize=96";
                 result = chromeDriver.PageSource;
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-container");
-                //item-info
                 if (items.Length < 90)
                 {
                     continue;
