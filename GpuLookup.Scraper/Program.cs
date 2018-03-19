@@ -94,18 +94,8 @@ namespace GpuLookup.Scraper
             string result = null;
             var page = 1;
             chromeDriver.Url = page1;
-            //var timeOut = DateTime.Now + TimeSpan.FromSeconds(20);
             while (page < 16)
             {
-                ////go to new proxy on timeout
-                //if (page == 1 && DateTime.Now > timeOut )
-                //{
-                //    chromeDriver.Quit();
-                //    options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1, proxyList.Count - 1)]);
-                //    chromeDriver = new ChromeDriver(options);
-                //    timeOut = DateTime.Now + TimeSpan.FromSeconds(10);
-                //    Console.WriteLine("Timeout Reset");
-                //}
                 var newUrl = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/" + "Page-" + page + "?&PageSize=96";
                 if (page != 1 && chromeDriver.Url != newUrl)
                     chromeDriver.Url = newUrl;
