@@ -35,23 +35,16 @@ namespace GpuLookup.Scraper
 
         static string connectionString = ConfigurationManager.ConnectionStrings["conString"].ConnectionString;
 
-        static string[] proxyList = new string[] {
-            "207.246.99.38:8080",
-            "144.202.55.61:8080",
-            "207.246.106.194:8080",
-            "35.199.63.39:8080",
-            "207.246.110.64:8080",
-            "207.246.99.75:8080",
-            "144.202.112.88:8080",
-            "138.68.236.249:3128",
-            "191.101.156.89:80"
-        };
+        static List<string> proxyList = null;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Press enter to scrape Newegg, Amazon, Microcenter, and Best Buy.");
             Console.ReadLine();
             TruncateTable();
+            Task.WaitAll(
+                GenerateProxyList()
+            );
             Task.WaitAll(
                 NeweggScrape(),
                 AmazonScrape(),
@@ -64,19 +57,38 @@ namespace GpuLookup.Scraper
             Console.ReadLine();
         }
 
+        static async Task GenerateProxyList()
+        {
+            var parser = new HtmlParser();
+            var page = "https://www.us-proxy.org/";
+            var webClient = new WebClient();
+            string result = await webClient.DownloadStringTaskAsync(page);
+            var document = parser.Parse(result);
+            var items = document.QuerySelectorAll("#proxylisttable > tbody > tr");
+            
+            for(var i = 0; i < 6; i++)
+            {
+                if (proxyList == null)
+                {
+                    proxyList = new List<string>();
+                }
+                proxyList.Add(items[i].FirstChild.TextContent + ":" + items[i].QuerySelector("td:nth-child(2)").TextContent);
+            }
+        }
+
         static async Task NeweggScrape()
         {
             var parser = new HtmlParser();
-            var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/?recaptcha=pass&PageSize=96";
+            var page1 = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/&PageSize=96";
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--disable-javascript");
             options.AddArgument("--disable-images");
             options.AddArgument("incognito"); 
             options.AddArgument("--disable-bundled-ppapi-flash"); 
             options.AddArgument("--disable-extensions");
-            options.AddArgument("--headless");
+            //options.AddArgument("--headless");
             var rnd = new Random();
-            options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1,proxyList.Length - 1)]); 
+            options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1,proxyList.Count - 1)]); 
             IWebDriver chromeDriver = new ChromeDriver(options);
             string result = null;
             var page = 1;
