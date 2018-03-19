@@ -29,6 +29,7 @@ class GpuTable extends Component {
     .then(
       resp => {
         this.setState({ gpus: resp.data });
+        console.log(resp.data);
       },
       err => {
         console.log(err);
@@ -68,7 +69,7 @@ class GpuTable extends Component {
   }
 
   search = () => {
-     const query = encodeURIComponent(this.searchBar.state.value);
+     const query = this.searchBar.state.value;
      this.setState({ Query: query }, this.getGpus)
    }
 
@@ -116,7 +117,7 @@ class GpuTable extends Component {
         </div>
           <Card>
             {
-              this.state.gpus[1] && 
+              this.state.gpus && this.state.gpus[1] && 
               <Pagination items={Math.floor(this.state.gpus[0].RowCount / 10) || 1} activePage={this.state.PageNum || 1} maxButtons={8} onSelect={(pagination) => this.newPage(pagination)}/>
             }
             <Table className="responsive table table-hover">
@@ -129,6 +130,7 @@ class GpuTable extends Component {
                 </tr>
               </thead>
               {
+                this.state.gpus &&
                 this.state.gpus.map((item, index) => (
                 <tbody key={index}>
                   <tr>
