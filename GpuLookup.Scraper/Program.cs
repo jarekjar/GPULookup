@@ -46,10 +46,10 @@ namespace GpuLookup.Scraper
                 GenerateProxyList()
             );
             Task.WaitAll(
-                NeweggScrape()
-                //AmazonScrape(),
-                //MicrocenterScrape(),
-                //BestBuyScrape()
+                NeweggScrape(),
+                AmazonScrape(),
+                MicrocenterScrape(),
+                BestBuyScrape()
             );
             Console.WriteLine("Filtering the SQL Table.....");
             FilterDuplicates();
@@ -73,6 +73,7 @@ namespace GpuLookup.Scraper
                     proxyList = new List<string>();
                 }
                 proxyList.Add(items[i].FirstChild.TextContent + ":" + items[i].QuerySelector("td:nth-child(2)").TextContent);
+                Console.WriteLine(proxyList[i]);
             }
         }
 
@@ -86,14 +87,15 @@ namespace GpuLookup.Scraper
             options.AddArgument("--disable-bundled-ppapi-flash"); 
             options.AddArgument("--disable-extensions");
             //options.AddArgument("--headless");
+            options.PageLoadStrategy = (PageLoadStrategy)3;
             var rnd = new Random();
-            options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1,proxyList.Count - 1)]); 
+            //options.AddArgument("--proxy-server=http://" + proxyList[rnd.Next(1,proxyList.Count - 1)]); 
             IWebDriver chromeDriver = new ChromeDriver(options);
             string result = null;
             var page = 1;
             chromeDriver.Url = page1;
-            var timeOut = DateTime.Now + TimeSpan.FromSeconds(20);
-            while (page < 30)
+            //var timeOut = DateTime.Now + TimeSpan.FromSeconds(20);
+            while (page < 16)
             {
                 ////go to new proxy on timeout
                 //if (page == 1 && DateTime.Now > timeOut )
@@ -104,9 +106,9 @@ namespace GpuLookup.Scraper
                 //    timeOut = DateTime.Now + TimeSpan.FromSeconds(10);
                 //    Console.WriteLine("Timeout Reset");
                 //}
-
-                if (page != 1)
-                    chromeDriver.Url = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/" + "Page-" + page + "?&PageSize=96";
+                var newUrl = "https://www.newegg.com/Desktop-Graphics-Cards/SubCategory/ID-48/" + "Page-" + page + "?&PageSize=96";
+                if (page != 1 && chromeDriver.Url != newUrl)
+                    chromeDriver.Url = newUrl;
                 result = chromeDriver.PageSource;
                 var document = parser.Parse(result);
                 var items = document.QuerySelectorAll(".item-container");
@@ -235,7 +237,7 @@ namespace GpuLookup.Scraper
                     gpu.Price = Double.Parse(item.GetAttribute("data-price"));
                     gpu.Source = "Best Buy";
                     gpu.Url = "https://www.bestbuy.com" + item.GetAttribute("data-url");
-                        if(gpu.ImageUrl != null)
+                        if(item.GetAttribute("data-img-path") != null)
                             gpu.ImageUrl = "https://pisces.bbystatic.com/image2/" + item.GetAttribute("data-img-path");
                     SQLInsert(gpu);
                 }
