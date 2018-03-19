@@ -70,13 +70,24 @@ class GpuTable extends Component {
 
   search = () => {
      const query = this.searchBar.state.value;
-     this.setState({ Query: query }, this.getGpus)
+     this.setState({ 
+       Query: query,
+       PageNum: 1
+      }, this.getGpus)
    }
 
    newPage = (pageNum) => {
       this.setState({
         PageNum: pageNum
       }, this.getGpus)
+   }
+
+   changePage = (e) => {
+     this.changedPage = parseInt(e.target.value);
+   }
+
+   goPage = () => {
+     this.newPage(this.changedPage);
    }
 
   render() {
@@ -118,8 +129,21 @@ class GpuTable extends Component {
           <Card>
             {
               this.state.gpus && this.state.gpus[1] && 
-              <Pagination items={Math.floor(this.state.gpus[0].RowCount / 10) || 1} activePage={this.state.PageNum || 1} maxButtons={8} onSelect={(pagination) => this.newPage(pagination)}/>
+              <div className="row">
+                <Pagination items={Math.floor(this.state.gpus[0].RowCount / 10) || 1} activePage={this.state.PageNum || 1} maxButtons={8} onSelect={(pagination) => this.newPage(pagination)}/>
+                <span className="pageCount">{Math.floor(this.state.gpus[0].RowCount / 10)} pages </span>
+              </div>
             }
+            <div className="inputBox pageCount">
+                   <span>Go To Page: </span>
+                   <input type="number" onChange={(e) => this.changePage(e)}/>
+                   <a href="javascript:;" 
+                      className="btn btn-sq-xs btn-primary light-blue darken-3"
+                      onClick={this.goPage}
+                      >
+                      Go!
+                   </a>
+                </div>
             <Table className="responsive table table-hover">
               <thead>
                 <tr>
