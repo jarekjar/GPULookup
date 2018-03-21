@@ -97,12 +97,12 @@ namespace GpuLookup.Services
             return gpus;
         }
 
-        public void Update(int id, double price)
+        public void Update(int id, decimal price)
         {
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conString"].ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand("gpulookup_update", conn) { CommandType = CommandType.StoredProcedure };
-                cmd.Parameters.Add("@price", SqlDbType.Int).Value = price;
+                cmd.Parameters.Add("@price", SqlDbType.Money).Value = price;
                 cmd.Parameters.Add("@id", SqlDbType.NVarChar).Value = id;
                 conn.Open();
                 cmd.ExecuteNonQuery();

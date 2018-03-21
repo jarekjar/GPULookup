@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {Card, Table, Autocomplete, Button, Pagination, Modal} from 'react-materialize';
+import {Card, Table, Autocomplete, Button, Pagination} from 'react-materialize';
 import * as axios from 'axios';
+import {Modal} from 'react-bootstrap';
+import $ from 'jquery';
 
 class GpuTable extends Component {
   state = {
@@ -9,7 +11,9 @@ class GpuTable extends Component {
     PageNum: 1,
     Ascending: true,
     SortBy: "price",
-    Query: ""
+    Query: "",
+    showModal: false,
+    priceChange: 0
   }
 
   
@@ -29,7 +33,6 @@ class GpuTable extends Component {
     .then(
       resp => {
         this.setState({ gpus: resp.data });
-        console.log(resp.data);
       },
       err => {
         console.log(err);
@@ -87,7 +90,7 @@ class GpuTable extends Component {
    }
 
    newPrice = (e) => {
-     this.updatedPrice = parseInt(e.target.value);
+     this.setState({priceChange: parseFloat(e.target.value)});
    }
 
    goPage = () => {
@@ -98,8 +101,8 @@ class GpuTable extends Component {
 
     // modal pop up for editing.
 
-    const newPrice = encodeURIComponent(this.updatedPrice);
-    axios.put(`http://localhost:53472/api/update/${id}/${newPrice}`)
+    const newPrice = encodeURIComponent(this.state.priceChange);
+    axios.put(`http://localhost:53472/api/update/?id=${id}&price=${newPrice}`)
     .then(
       resp => {
         this.getGpus();
@@ -210,17 +213,70 @@ class GpuTable extends Component {
                     <td>${item.Price}</td>
                     <td>{item.Source}</td>
                     <td>
-                      <i className="fa fa-edit fa-2x text-warning" 
-                          onClick={() => {$('#foo').modal('open')}}>Show Modal
-                      </i>
-                      <Modal
-                        id='foo'
-                        header='Update the price.'>
-                        <input type="number" onChange={(e) => this.newPrice(e)}/>
-                        <Button onClick={() => this.update(item.Id)}> Update! </Button>
-                      </Modal>
-                      <i className="fa fa-ban fa-2x text-danger" onClick={() => this.delete(item.Id)}> 
-                      </i>
+                        <i className="fa fa-edit fa-2x text-warning"
+                          data-toggle="modal" 
+                          data-target="#numModal"
+                          onClick={() => 
+                            this.setState({priceChange: item.Price, 
+                                           currentUrl: item.Url, 
+                                           currentImg: item.ImageUrl, 
+                                           currentCard: item.Card
+                                          })
+                          }
+                        >
+                        </i>
+                        <div id="numModal" className="modal" tabIndex="-1" role="dialog">
+                          <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h5 className="modal-title">Update this price</h5>
+                              </div>
+                              <div className="modal-body">
+                              <a href={this.state.currentUrl}>
+                                <img 
+                                src={this.state.currentImg}
+                                alt={"No Image"}
+                                style={{"margin": "0 auto"}}
+                                className="gpu-image-big"
+                                />
+                              </a>
+                              <br />
+                              <a href={this.state.currentUrl}> {this.state.currentCard} 
+                              </a>
+                              $<input type="number" value={this.state.priceChange} onChange={(e) => this.newPrice(e)}/>
+                              <Button className='light-blue darken-3' onClick={() => this.update(item.Id)} data-dismiss="modal"> Update! </Button>
+                              <Button className="close-button light-blue darken-3" data-dismiss="modal"> Close </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <i className="fa fa-ban fa-2x text-danger" 
+                            data-toggle="modal" 
+                            data-target="#dialogModel"
+                        > 
+                        </i>
+                        <div id="dialogModel" className="modal">
+                          <div className="modal-header">
+                              <h5 className="modal-title">Delete this?</h5>
+                          </div>
+                          <div className="modal-body">
+                            <a href={this.state.currentUrl}>
+                                <img 
+                                src={this.state.currentImg}
+                                alt={"No Image"}
+                                style={{"margin": "0 auto"}}
+                                className="gpu-image-big"
+                                />
+                            </a>
+                              <br />
+                              <a href={this.state.currentUrl}> {this.state.currentCard} 
+                              </a>
+                              <br />
+                                <Button className='light-blue darken-3 button-spread' onClick={() => this.delete(item.Id)} data-dismiss="modal"> Delete </Button>
+                                <Button className="close-button light-blue darken-3 button-spread" data-dismiss="modal"> Close </Button>
+                              
+                          </div>
+                        </div>
                     </td>
                   </tr>
                 </tbody>

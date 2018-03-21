@@ -39,6 +39,11 @@ body {
   box-shadow: 0 1px 0 0 #0277BD;
 }
 
+input[type=number]:focus:not([readonly]) {
+  border-bottom: 1px solid #0277BD;
+  box-shadow: 0 1px 0 0 #0277BD;
+}
+
 .dropdown-content li>a, .dropdown-content li>span {
   color: #0277BD!important;
 }
@@ -52,6 +57,11 @@ body {
 .gpu-image {
   height: 100px;
   width: 100px;
+}
+
+.gpu-image-big {
+  height: 200px;
+  width: 200px;
 }
 
 .pagination li.active {
@@ -81,4 +91,26 @@ body {
 
 .fa:hover {
   color: black!important;
+}
+
+#numModal {
+  height: 565px;
+  width: 400px;
+}
+
+.modal-content {
+  margin: 13px;
+}
+
+.close-button {
+  margin-left: 20px;
+}
+
+#dialogModel {
+  height: 425px;
+  width: 330px;
+}
+
+.button-spread {
+  margin-top: 25px;
 }

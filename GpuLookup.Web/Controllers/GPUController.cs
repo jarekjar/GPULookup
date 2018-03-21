@@ -60,8 +60,8 @@ namespace GpuLookup.Controllers
             }
         }
 
-        [Route("api/update/{id}/{price}"), HttpPut]
-        public HttpResponseMessage Update(int id, double price)
+        [Route("api/update/"), HttpPut]
+        public HttpResponseMessage Update(int id, decimal price)
         {
             try
             {
