@@ -220,7 +220,8 @@ class GpuTable extends Component {
                             this.setState({priceChange: item.Price, 
                                            currentUrl: item.Url, 
                                            currentImg: item.ImageUrl, 
-                                           currentCard: item.Card
+                                           currentCard: item.Card,
+                                           currentId: item.Id
                                           })
                           }
                         >
@@ -245,7 +246,7 @@ class GpuTable extends Component {
                                 </a>
                               }
                               <input type="number" value={this.state.priceChange} onChange={(e) => this.newPrice(e)}/>
-                              <Button className='light-blue darken-3' onClick={() => this.update(item.Id)} data-dismiss="modal"> Update! </Button>
+                              <Button className='light-blue darken-3' onClick={() => this.update(this.state.currentId)} data-dismiss="modal"> Update! </Button>
                               <Button className="close-button light-blue darken-3" data-dismiss="modal"> Close </Button>
                               </div>
                         </div>
@@ -256,7 +257,8 @@ class GpuTable extends Component {
                               this.setState({priceChange: item.Price, 
                                              currentUrl: item.Url, 
                                              currentImg: item.ImageUrl, 
-                                             currentCard: item.Card
+                                             currentCard: item.Card,
+                                             currentId: item.Id
                                             })
                             }
                         > 
@@ -281,7 +283,7 @@ class GpuTable extends Component {
                                 </a>
                               }
                               <br />
-                                <Button className='light-blue darken-3 button-spread' onClick={() => this.delete(item.Id)} data-dismiss="modal"> Delete </Button>
+                                <Button className='light-blue darken-3 button-spread' onClick={() => this.delete(this.state.currentId)} data-dismiss="modal"> Delete </Button>
                                 <Button className="close-button light-blue darken-3 button-spread" data-dismiss="modal"> Close </Button>
                               
                           </div>
