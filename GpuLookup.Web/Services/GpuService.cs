@@ -90,10 +90,34 @@ namespace GpuLookup.Services
                     gpu.Url = rdr.GetString(3);
                     gpu.ImageUrl = rdr.GetString(4);
                     gpu.RowCount = rdr.GetInt32(5);
+                    gpu.Id = rdr.GetInt32(6);
                     gpus.Add(gpu);
                 }
             }
             return gpus;
+        }
+
+        public void Update(int id, double price)
+        {
+            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conString"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand("gpulookup_update", conn) { CommandType = CommandType.StoredProcedure };
+                cmd.Parameters.Add("@price", SqlDbType.Int).Value = price;
+                cmd.Parameters.Add("@id", SqlDbType.NVarChar).Value = id;
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void Delete(int id)
+        {
+            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["conString"].ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand("gpus_delete", conn) { CommandType = CommandType.StoredProcedure };
+                cmd.Parameters.Add("@id", SqlDbType.NVarChar).Value = id;
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

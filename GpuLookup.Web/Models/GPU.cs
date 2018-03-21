@@ -7,6 +7,7 @@ namespace GpuLookup.Models
 {
     public class GPU
     {
+        public int? Id { get; set; }
         public decimal Price { get; set; }
         public string Card { get; set; }
         public string Source { get; set; }

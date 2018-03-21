@@ -60,6 +60,34 @@ namespace GpuLookup.Controllers
             }
         }
 
+        [Route("api/update/{id}/{price}"), HttpPut]
+        public HttpResponseMessage Update(int id, double price)
+        {
+            try
+            {
+                gpuService.Update(id, price);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [Route("api/delete/{id}"), HttpDelete]
+        public HttpResponseMessage Update(int id)
+        {
+            try
+            {
+                gpuService.Delete(id);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
         public class Paginate
         {
             public int PageNum { get; set; }

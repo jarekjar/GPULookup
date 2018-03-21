@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Card, Table, Autocomplete, Button, Pagination} from 'react-materialize';
+import {Card, Table, Autocomplete, Button, Pagination, Modal} from 'react-materialize';
 import * as axios from 'axios';
 
 class GpuTable extends Component {
@@ -86,8 +86,43 @@ class GpuTable extends Component {
      this.changedPage = parseInt(e.target.value);
    }
 
+   newPrice = (e) => {
+     this.updatedPrice = parseInt(e.target.value);
+   }
+
    goPage = () => {
      this.newPage(this.changedPage);
+   }
+
+   update = (id) => {
+
+    // modal pop up for editing.
+
+    const newPrice = encodeURIComponent(this.updatedPrice);
+    axios.put(`http://localhost:53472/api/update/${id}/${newPrice}`)
+    .then(
+      resp => {
+        this.getGpus();
+      },
+      err => {
+        console.log(err);
+      }
+    )
+   }
+
+   delete = (id) => {
+
+    // modal pop up for are you sure delete? 
+
+    axios.delete(`http://localhost:53472/api/delete/${id}`)
+    .then(
+      resp => {
+        this.getGpus();
+      },
+      err => {
+        console.log(err);
+      }
+    )
    }
 
   render() {
@@ -151,12 +186,13 @@ class GpuTable extends Component {
                     <th>Card</th>
                     <th>Price</th>
                     <th>Source</th>
+                    <th>Edit</th>
                 </tr>
               </thead>
               {
                 this.state.gpus &&
                 this.state.gpus.map((item, index) => (
-                <tbody key={index}>
+                <tbody key={item.Id}>
                   <tr>
                     <td>
                       <a href={item.Url}>
@@ -173,6 +209,19 @@ class GpuTable extends Component {
                     </td>
                     <td>${item.Price}</td>
                     <td>{item.Source}</td>
+                    <td>
+                      <i className="fa fa-edit fa-2x text-warning" 
+                          onClick={() => {$('#foo').modal('open')}}>Show Modal
+                      </i>
+                      <Modal
+                        id='foo'
+                        header='Update the price.'>
+                        <input type="number" onChange={(e) => this.newPrice(e)}/>
+                        <Button onClick={() => this.update(item.Id)}> Update! </Button>
+                      </Modal>
+                      <i className="fa fa-ban fa-2x text-danger" onClick={() => this.delete(item.Id)}> 
+                      </i>
+                    </td>
                   </tr>
                 </tbody>
                 ))

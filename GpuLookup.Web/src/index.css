@@ -74,3 +74,11 @@ body {
 .btn-sq-xs {
   margin-left: 1em;
 }
+
+.fa {
+  padding: 5px;
+}
+
+.fa:hover {
+  color: black!important;
+}
