@@ -60,8 +60,8 @@ input[type=number]:focus:not([readonly]) {
 }
 
 .gpu-image-big {
-  height: 200px;
-  width: 200px;
+  height: 220px;
+  width: 270px;
 }
 
 .pagination li.active {

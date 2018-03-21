@@ -243,7 +243,7 @@ class GpuTable extends Component {
                               <br />
                               <a href={this.state.currentUrl}> {this.state.currentCard} 
                               </a>
-                              $<input type="number" value={this.state.priceChange} onChange={(e) => this.newPrice(e)}/>
+                              <input type="number" value={this.state.priceChange} onChange={(e) => this.newPrice(e)}/>
                               <Button className='light-blue darken-3' onClick={() => this.update(item.Id)} data-dismiss="modal"> Update! </Button>
                               <Button className="close-button light-blue darken-3" data-dismiss="modal"> Close </Button>
                               </div>
@@ -253,6 +253,13 @@ class GpuTable extends Component {
                         <i className="fa fa-ban fa-2x text-danger" 
                             data-toggle="modal" 
                             data-target="#dialogModel"
+                            onClick={() => 
+                              this.setState({priceChange: item.Price, 
+                                             currentUrl: item.Url, 
+                                             currentImg: item.ImageUrl, 
+                                             currentCard: item.Card
+                                            })
+                            }
                         > 
                         </i>
                         <div id="dialogModel" className="modal">
