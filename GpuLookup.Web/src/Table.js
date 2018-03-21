@@ -239,8 +239,11 @@ class GpuTable extends Component {
                                 />
                               </a>
                               <br />
-                              <a href={this.state.currentUrl}> {this.state.currentCard} 
-                              </a>
+                              {
+                                this.state.currentCard &&
+                                <a href={this.state.currentUrl}> {this.state.currentCard.substring(0,60)}... 
+                                </a>
+                              }
                               <input type="number" value={this.state.priceChange} onChange={(e) => this.newPrice(e)}/>
                               <Button className='light-blue darken-3' onClick={() => this.update(item.Id)} data-dismiss="modal"> Update! </Button>
                               <Button className="close-button light-blue darken-3" data-dismiss="modal"> Close </Button>
@@ -272,8 +275,11 @@ class GpuTable extends Component {
                                 />
                             </a>
                               <br />
-                              <a href={this.state.currentUrl}> {this.state.currentCard} 
-                              </a>
+                              {
+                                this.state.currentCard &&
+                                <a href={this.state.currentUrl}> {this.state.currentCard.substring(0,60)}... 
+                                </a>
+                              }
                               <br />
                                 <Button className='light-blue darken-3 button-spread' onClick={() => this.delete(item.Id)} data-dismiss="modal"> Delete </Button>
                                 <Button className="close-button light-blue darken-3 button-spread" data-dismiss="modal"> Close </Button>
