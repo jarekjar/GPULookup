@@ -114,3 +114,7 @@ input[type=number]:focus:not([readonly]) {
 .button-spread {
   margin-top: 25px;
 }
+
+.editDelete {
+  width: 100px;
+}

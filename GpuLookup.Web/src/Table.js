@@ -212,7 +212,7 @@ class GpuTable extends Component {
                     </td>
                     <td>${item.Price}</td>
                     <td>{item.Source}</td>
-                    <td>
+                    <td className="editDelete">
                         <i className="fa fa-edit fa-2x text-warning"
                           data-toggle="modal" 
                           data-target="#numModal"
