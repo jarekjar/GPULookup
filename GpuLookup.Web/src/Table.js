@@ -225,9 +225,7 @@ class GpuTable extends Component {
                           }
                         >
                         </i>
-                        <div id="numModal" className="modal" tabIndex="-1" role="dialog">
-                          <div className="modal-dialog" role="document">
-                            <div className="modal-content">
+                        <div id="numModal" className="modal">
                               <div className="modal-header">
                                 <h5 className="modal-title">Update this price</h5>
                               </div>
@@ -247,8 +245,6 @@ class GpuTable extends Component {
                               <Button className='light-blue darken-3' onClick={() => this.update(item.Id)} data-dismiss="modal"> Update! </Button>
                               <Button className="close-button light-blue darken-3" data-dismiss="modal"> Close </Button>
                               </div>
-                            </div>
-                          </div>
                         </div>
                         <i className="fa fa-ban fa-2x text-danger" 
                             data-toggle="modal" 

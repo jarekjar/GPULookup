@@ -94,8 +94,8 @@ input[type=number]:focus:not([readonly]) {
 }
 
 #numModal {
-  height: 565px;
-  width: 400px;
+  height: 490px;
+  width: 300px;
 }
 
 .modal-content {
@@ -107,8 +107,8 @@ input[type=number]:focus:not([readonly]) {
 }
 
 #dialogModel {
-  height: 425px;
-  width: 330px;
+  height: 440px;
+  width: 300px;
 }
 
 .button-spread {
