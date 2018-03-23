@@ -203,7 +203,7 @@ class GpuTable extends Component {
                 <tbody key={item.Id}>
                   <tr>
                     <td>
-                      <a href={item.Url}>
+                      <a href={item.Url} target="_blank">
                         <img 
                         src={item.ImageUrl}
                         alt={"No Image"}
@@ -212,7 +212,7 @@ class GpuTable extends Component {
                       </a>
                     </td>
                     <td>
-                      <a href={item.Url}> {item.Card} 
+                      <a href={item.Url} target="_blank"> {item.Card} 
                       </a>
                     </td>
                     <td>${item.Price}</td>
@@ -236,7 +236,7 @@ class GpuTable extends Component {
                                 <h5 className="modal-title">Update this price</h5>
                               </div>
                               <div className="modal-body">
-                              <a href={this.state.currentUrl}>
+                              <a href={this.state.currentUrl} target="_blank">
                                 <img 
                                 src={this.state.currentImg}
                                 alt={"No Image"}
@@ -247,7 +247,7 @@ class GpuTable extends Component {
                               <br />
                               {
                                 this.state.currentCard &&
-                                <a href={this.state.currentUrl}> {this.state.currentCard.substring(0,60)}... 
+                                <a href={this.state.currentUrl} target="_blank"> {this.state.currentCard.substring(0,60)}... 
                                 </a>
                               }
                               <input type="number" value={this.state.priceChange} onChange={(e) => this.newPrice(e)}/>
@@ -273,7 +273,7 @@ class GpuTable extends Component {
                               <h5 className="modal-title">Delete this?</h5>
                           </div>
                           <div className="modal-body">
-                            <a href={this.state.currentUrl}>
+                            <a href={this.state.currentUrl} target="_blank">
                                 <img 
                                 src={this.state.currentImg}
                                 alt={"No Image"}
@@ -284,7 +284,7 @@ class GpuTable extends Component {
                               <br />
                               {
                                 this.state.currentCard &&
-                                <a href={this.state.currentUrl}> {this.state.currentCard.substring(0,60)}... 
+                                <a href={this.state.currentUrl} target="_blank"> {this.state.currentCard.substring(0,60)}... 
                                 </a>
                               }
                               <br />
