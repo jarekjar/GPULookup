@@ -3,6 +3,7 @@ import {Card, Table, Autocomplete, Button, Pagination} from 'react-materialize';
 import * as axios from 'axios';
 import {Modal} from 'react-bootstrap';
 import $ from 'jquery';
+import loader from './Loader.gif'
 
 class GpuTable extends Component {
   state = {
@@ -13,10 +14,9 @@ class GpuTable extends Component {
     SortBy: "price",
     Query: "",
     showModal: false,
-    priceChange: 0
+    priceChange: 0,
+    loading: false
   }
-
-  
 
   componentDidMount = () => {
     this.getGpus();
@@ -29,10 +29,11 @@ class GpuTable extends Component {
       SortBy: this.state.SortBy,
       Query: this.state.Query
     }
-    axios.post("http://localhost:53472/api/getNext", sortObj)
+    this.setState({loading: true})
+    axios.post("http://gpulookup.test/api/getNext", sortObj)
     .then(
       resp => {
-        this.setState({ gpus: resp.data });
+        this.setState({ gpus: resp.data, loading: false });
       },
       err => {
         console.log(err);
@@ -102,7 +103,7 @@ class GpuTable extends Component {
     // modal pop up for editing.
 
     const newPrice = encodeURIComponent(this.state.priceChange);
-    axios.put(`http://localhost:53472/api/update/?id=${id}&price=${newPrice}`)
+    axios.put(`http://gpulookup.test/api/update/?id=${id}&price=${newPrice}`)
     .then(
       resp => {
         this.getGpus();
@@ -117,7 +118,7 @@ class GpuTable extends Component {
 
     // modal pop up for are you sure delete? 
 
-    axios.delete(`http://localhost:53472/api/delete/${id}`)
+    axios.delete(`http://gpulookup.test/api/delete/${id}`)
     .then(
       resp => {
         this.getGpus();
@@ -173,15 +174,19 @@ class GpuTable extends Component {
               </div>
             }
             <div className="inputBox pageCount">
-                   <span>Go To Page: </span>
-                   <input type="number" onChange={(e) => this.changePage(e)}/>
-                   <a href="javascript:;" 
-                      className="btn btn-sq-xs btn-primary light-blue darken-3"
-                      onClick={this.goPage}
-                      >
-                      Go!
-                   </a>
-                </div>
+                <span>Go To Page: </span>
+                <input type="number" onChange={(e) => this.changePage(e)}/>
+                <a href="javascript:;" 
+                  className="btn btn-sq-xs btn-primary light-blue darken-3"
+                  onClick={this.goPage}
+                  >
+                  Go!
+                </a>
+            </div> 
+            {
+            this.state.loading &&
+            <img src={loader} alt="loading..." style={{height: 50, width: 50}} />
+            }
             <Table className="responsive table table-hover">
               <thead>
                 <tr>
@@ -297,6 +302,7 @@ class GpuTable extends Component {
           </Card>
         </div>
       </div>
+      
     );
   }
 }
