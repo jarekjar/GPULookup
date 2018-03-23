@@ -88,6 +88,7 @@ namespace GpuLookup.Controllers
             }
         }
 
+        
         public class Paginate
         {
             public int PageNum { get; set; }
