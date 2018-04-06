@@ -49,7 +49,8 @@ namespace GpuLookup.Scraper
                 NeweggScrape(),
                 AmazonScrape(),
                 MicrocenterScrape(),
-                BestBuyScrape()
+                BestBuyScrape(),
+                //SomeOtherWebsiteScrape()
             );
             Console.WriteLine("Filtering the SQL Table.....");
             FilterDuplicates();
