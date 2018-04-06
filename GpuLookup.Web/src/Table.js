@@ -162,14 +162,22 @@ class GpuTable extends Component {
               />
           </div>
           <div className="search">
-            <Button waves='light' className='light-blue darken-3' onClick={this.search}>Search</Button>
+            <Button 
+              waves='light' 
+              className='light-blue darken-3' 
+              onClick={this.search}>Search
+            </Button>
           </div>
         </div>
           <Card>
             {
               this.state.gpus && this.state.gpus[1] && 
               <div className="row">
-                <Pagination items={Math.floor(this.state.gpus[0].RowCount / 10) || 1} activePage={this.state.PageNum || 1} maxButtons={8} onSelect={(pagination) => this.newPage(pagination)}/>
+                <Pagination 
+                  items={Math.floor(this.state.gpus[0].RowCount / 10) || 1} 
+                  activePage={this.state.PageNum || 1} 
+                  maxButtons={8} 
+                  onSelect={(pagination) => this.newPage(pagination)}/>
                 <span className="pageCount">{Math.floor(this.state.gpus[0].RowCount / 10)} pages </span>
               </div>
             }
@@ -251,8 +259,15 @@ class GpuTable extends Component {
                                 </a>
                               }
                               <input type="number" value={this.state.priceChange} onChange={(e) => this.newPrice(e)}/>
-                              <Button className='light-blue darken-3' onClick={() => this.update(this.state.currentId)} data-dismiss="modal"> Update! </Button>
-                              <Button className="close-button light-blue darken-3" data-dismiss="modal"> Close </Button>
+                              <Button 
+                                className='light-blue darken-3' 
+                                onClick={() => this.update(this.state.currentId)} 
+                                data-dismiss="modal"> Update! 
+                              </Button>
+                              <Button 
+                                className="close-button light-blue darken-3" 
+                                data-dismiss="modal"> Close 
+                              </Button>
                               </div>
                         </div>
                         <i className="fa fa-ban fa-2x text-danger" 
